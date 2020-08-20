@@ -1,0 +1,43 @@
+/* Add a black background color to the top navigation */
+.topnav {
+  background-color: pink;
+  overflow: hidden;
+}
+
+header {
+  position: fixed;
+  z-index: 10;
+  top : 0;
+  left: 0;
+  width: 100%;
+}
+/* Style the links inside the navigation bar */
+.topnav a {
+  font-family: "Xiomara";
+  float: left;
+  color: #333;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  line-height: 22px;
+}
+
+.topnav a:nth-child(1) {
+  z-index: 50;
+}
+
+.topnav a:nth-child(3), .topnav a:nth-child(2) {
+  float: right;
+}
+/* Change the color of links on hover */
+.topnav a:hover {
+  color: white;
+  font-style: italic;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}

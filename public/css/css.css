@@ -1,0 +1,529 @@
+* {
+	padding : 0px;
+	margin: 0px;
+	border : 0;
+}
+
+@font-face {
+  font-family: "Courgette";
+  src:url("../fonts/Courgette-Regular.ttf") format("ttf");
+}
+
+.flag {
+	height: 2.3vh;
+}
+
+.flag:hover {
+	transform: skewY(-7deg);
+}
+
+.flag-span {
+	height : 1vh;
+	width: 100%;
+	display: flex;
+justify-content: space-around;
+}
+
+.container {
+	display : flex;
+	flex-direction : row;
+	height : 100vh;
+}
+
+/* Loaders */
+#loader{
+	position: absolute;
+	top : 0px;
+	left: 0px;
+	height : 100%;
+	width : 100%;
+
+	font-family : "Xiomara", "Times New Roman";
+	font-size: 140%;
+	background-color:pink;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction:column;
+
+	z-index: 20;
+}
+
+
+/* Cartes Action */
+#ActionDiv {
+	position: absolute;
+	top:20%;
+	left: 20%;
+	height: 60%;
+	width: 60%;
+	z-index: 5;
+
+	padding: 2%;
+	border : 7px solid white;
+	border-radius : 70px;
+
+	background-color: #41eff2;
+
+	color : white;
+	font-family : "Xiomara", "Times New Roman";
+	font-size : 300%;
+	text-align:center;
+
+	display: flex;
+	align-items: center;
+	flex-direction:column;
+}
+
+.carteDefi {
+	position: absolute;
+	top: 10%;
+	left:30%;
+	height:80%;
+	width: 30%;
+	z-index: 7;
+}
+
+/* Cartes Quizz */
+#question {
+	font-family : "Xiomara", "Times New Roman";
+	font-size: 150%;
+	z-index:6;
+	padding-top : 40%;
+	padding-left : 10%;
+	padding-right : 10%;
+	text-align : center;
+}
+
+#QuizzDiv{
+	display: flex;
+	align-items: center;
+	flex-direction:column;
+
+	position: absolute;
+	top: 10%;
+	left:35%;
+	height:80%;
+	width: 25%;
+	z-index: 7;
+	/* max-width: 30%;
+	height: 65%; */
+}
+
+#QuizzDiv ol, .Result{
+	font-family : "Xiomara", "Times New Roman";
+	color:white;
+	font-size: 140%;
+	text-align:center;
+	list-style: none;
+	flex-grow : 1;
+	padding-left : 11%;
+	padding-right : 11%;
+
+	z-index:5;
+}
+
+.Result{
+	padding-top : 50%;
+}
+
+#QuizzDiv img {
+	position: absolute;
+	height:100%;
+	width:100%
+}
+
+#QuizzDiv ol li{
+	margin-bottom: 20%;
+}
+
+.QuizzLi {
+	font-family: "Courgette", "Times New Roman";
+	font-size: large;
+  background-color: transparent;
+}
+
+.QuizzLi:hover {
+	color:white;
+	font-style: oblique;
+}
+
+@font-face {
+ font-family: "Xiomara";
+ src: url("Xiomara-Script.ttf") format("ttf");
+}
+/* Carte en général */
+.carte {
+	position: absolute;
+	top: 10%;
+	left:35%;
+	height:80%;
+	width: 25%;
+	z-index: 5;
+}
+
+
+/* basiques */
+#welcomeDiv {
+	font-family : "Times New Roman";
+	font-size : 17px;
+
+	position: absolute;
+	z-index : 5;
+	min-height : 34%;
+	min-width: 35%;
+	max-width : 60%;
+	left: 15vw;
+	top: 20vh;
+	background-color: white;
+	opacity: 1;
+	border: 5px solid pink;
+	border-radius: 5px;
+
+	padding : 5px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction:column;
+	text-align: center;
+}
+
+#welcomeDiv a{
+	color : pink;
+}
+#welcomeDiv a:hover{
+	font-weight:bold;
+	color:#73f4ee;
+}
+
+#welcomeDiv span {
+	font-size : 20px;
+}
+
+#welcomeDiv .tutoTitle {
+	font-family: "Xiomara";
+	margin-bottom: 2vh;
+	font-size: 25px;
+}
+
+#clickMe {
+	font-family : "Xiomara", "Times New Roman";
+	font-size : 20px;
+	min-height : 20%;
+	min-width : 25%;
+	background-color : #fffbba;
+	border: 5px dotted pink;
+	margin-top : 10px;
+	margin-bottom : 5px;
+
+	-webkit-box-shadow: 5px 5px 5px 0px rgba(141,162,176,1);
+-moz-box-shadow: 5px 5px 5px 0px rgba(141,162,176,1);
+box-shadow: 5px 5px 5px 0px rgba(141,162,176,1);
+}
+#clickMe:hover {
+	background-color : pink;
+	border: 5px dotted #fffbba;
+	margin-top : 10px;
+}
+
+#cache {
+	position:absolute;
+	top:0px;
+	z-index:3;
+	height:100%;
+	width:100%;
+	background-color:black;
+	opacity:0.8;
+}
+
+#plateau {
+	max-height:100%;
+	height : 100%;
+	width:70%;
+	overflow:hidden;
+	position:absolute;
+	z-index: 0;
+}
+
+#plateau img:first-of-type {
+	height: 100%;
+	width : 100%;
+}
+
+#menu {
+	width : 20%;
+	height: 100%;
+	max-height: 100%;
+	position: absolute;
+	right:0px;
+	background-color: black;
+	display: flex;
+    flex-direction: column;
+}
+
+#menu ul {
+	z-index : 10;
+}
+
+#menu ul li {
+	font-family : "Xiomara", "Times New Roman";
+	font-size: 140%;
+	display: flex;
+	align-items:center;
+	flex-direction:row;
+	justify-content : flex-end;
+	margin-bottom: 2%;
+	margin-right: 2%;
+	border : 1px none white;
+	border-radius: 70px;
+	text-align:right;
+	background-image : linear-gradient(to right, rgba(0,0,0,0), rgba(242, 179, 196,1) 70%);
+}
+
+#menu ul li img {
+
+	margin-left: 15px;
+	height : 50px;
+	width:50px;
+	border : 1px solid white;
+	border-radius: 70px;
+	background-color :white;
+
+}
+
+/* #tour {
+	font: 2em "Xiomara", serif;
+	text-align : center;
+	color : pink;
+} */
+
+#tourp {
+	font: 2em "Xiomara", serif;
+	text-align : center;
+	color : pink;
+}
+
+.bloc {
+	min-height:10%;
+	min-width:10%;
+	position:absolute;
+}
+#map {
+	min-height : 30%;
+	background-color : white;
+	border : 5px solid pink;
+	border-radius: 5px;
+
+	z-index : 5;
+	padding-top: 0.5vh;
+
+	text-align : center;
+
+	display :flex;
+	flex-direction : column;
+	justify-content : space-around;
+	align-items : center;
+}
+
+.iconL {
+	position: absolute;
+	left : 2vw;
+}
+
+.iconR {
+	position: absolute;
+	right: 1.5vw;
+}
+
+.mapA {
+	width: 100%;
+  text-decoration: none;
+  font-size: 20px;
+  color: black;
+}
+
+#map a:hover {
+  color: pink;
+}
+
+#map a:nth-child(4){
+	border: none;
+}
+
+#shop {
+	width: 100%;
+}
+
+.shopHover {
+	display: none;
+	width: 100%;
+	margin-bottom : 5px;
+	text-decoration: none;
+	color: black;
+	font-size: 16px;
+}
+
+#shop:hover .shopHover {display: block;}
+
+#shop:hover #map {
+	height : 37%;
+}
+
+.line {
+	width: 100%;
+	height: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	border-top: 2px solid pink;
+}
+
+
+
+
+i {
+	font-style:normal;
+}
+
+body {
+	background-color:black;
+}
+
+/* de */
+
+#de {
+	z-index : 20;
+	position : absolute;
+	height : 300px;
+
+	left: 33%;
+	top : 20%;
+}
+
+/* Win */
+
+#ecranWin {
+
+	position:absolute;
+	top: 20%;
+	left:30%;
+
+	height:60%;
+	width:40%;
+
+	background-color:red;
+	border: 5px solid white;
+	border-radius: 70px;
+	z-index: 10;
+
+	font-family : "Xiomara", "Times New Roman";
+	font-size: 180%;
+
+	display: flex;
+	align-items: center;
+	flex-direction:column;
+}
+
+#buttonWin{
+	/* text-decoration: underline overline #FF3028; */
+	border : 5px solid white;
+	background-color: white;
+	border-radius : 70px;
+	color: black;
+	-webkit-box-shadow: 12px 9px 25px -1px rgba(0,0,0,0.64);
+-moz-box-shadow: 12px 9px 25px -1px rgba(0,0,0,0.64);
+box-shadow: 12px 9px 25px -1px rgba(0,0,0,0.64);
+}
+
+#formDiv {
+	position : absolute;
+	bottom: 0;
+	left : 0;
+	width : 45%;
+
+	display : flex;
+	flex-wrap: nowrap;
+	justify-content : space-between;
+
+	z-index : 11;
+}
+
+#winDiv {
+	background-color: pink;
+	position: absolute;
+	height : 100%;
+	width : 84%;
+	z-index : 25;
+
+	display : flex;
+	flex-direction : column;
+	justify-content : center;
+	align-items : center;
+	font-family : "Xiomara", "Times New Roman";
+	font-size : 140%;
+}
+
+.centerWin {
+	display : flex;
+	flex-direction : column;
+	align-items : center;
+}
+
+.buttonWin {
+	width : 60vw;
+	display: flex;
+	flex-direction : row;
+	justify-content : space-between;
+}
+
+.buttonWin button {
+	margin-top : 15%;
+
+	min-width : 20vw;
+	max-width : 20vw;
+	min-height : 15vh;
+
+	font-family : "Xiomara", "Times New Roman";
+	font-size : 18px;
+
+	background-color : #fffbba;
+	border : 2px solid #57cceb;
+	border-radius : 15px;
+}
+
+/* #formCo button { */
+	/* font-family : "Xiomara", "Times New Roman"; */
+	/* font-size : 1.2em; */
+	/* color: black; */
+
+	/* padding : 0 5px 0 5px; */
+	/* border-top : 2px solid white; */
+	/* border-right : 2px solid white; */
+	/* border-left : 2px solid white; */
+	/* border-radius : 8px 8px 0 0; */
+
+	/* background-color : rgb(242, 179, 196); */
+/* } */
+
+/* #formCo button:hover { */
+	/* background-color:#73f4ee; */
+	/* font-style : italic; */
+/* } */
+
+
+/* #formIns button { */
+	/* font-family : "Xiomara", "Times New Roman"; */
+	/* font-size : 1.2em; */
+	/* padding : 0 5px 0 5px; */
+	/* border-top : 2px solid white; */
+	/* border-right : 2px solid white; */
+	/* border-left : 2px solid white; */
+	/* border-radius : 8px 8px 0 0; */
+	/* background-color : rgb(242, 179, 196); */
+/* } */
+
+/* #formIns button:hover { */
+	/* background-color:#73f4ee; */
+	/* font-style : italic; */
+/* } */
