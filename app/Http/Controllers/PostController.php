@@ -8,7 +8,7 @@ use App\Events\PostCreatedEvent;
 class PostController extends Controller
 {
     public function index() {
-        $event = new PostCreatedEvent();
+        $event = new PostCreatedEvent(['name' => 'Titre']);
         event($event);
         dd();
     }

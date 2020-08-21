@@ -1,3 +1,4 @@
+require ('./bootstrap');
 import Echo from 'laravel-echo'
 
 let e = new Echo({
