@@ -44,6 +44,10 @@ Route::get('/boardShop', function() {
   return view('realShop');
 })->name('boards shop');
 
+Route::get('/room', function() {
+  return view('room');
+});
+
 Route::post('/change_user', 'ProfilController@change_username')->name('change_username');
 
 Route::post('/change_email', 'ProfilController@change_email')->name('change_email');
