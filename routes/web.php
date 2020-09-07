@@ -44,7 +44,25 @@ Route::get('/boardShop', function() {
   return view('realShop');
 })->name('boards shop');
 
-Route::get('/room', 'PostController@index');
+Route::get('/chooseRoom', 'RoomController@selectRoom')->name('chooseRoom');
+Route::get('/createRoom', function() {
+  return view('createRoom');
+})->name('createRoom');
+Route::post('/createRoom', 'RoomController@createRoom')->name('createRoom');
+Route::get('/waitRoom', function() {
+  return view('waitRoom');
+})->middleware('checkRoomUrl')->name('waitRoom');
+
+Route::get('/connectRoom/{room}', function ($room) {
+  return view('connectRoom', ['room_url' => $room]);
+})->name('connectRoom');
+Route::post('/connectRoom', function() {
+  return 'U';
+})->name('connectRoom');
+
+Route::get('/room', function() {
+  return view('room');
+});
 
 Route::post('/change_user', 'ProfilController@change_username')->name('change_username');
 

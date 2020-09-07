@@ -29,10 +29,5 @@
 </head>
 <body>
 <p>Room</p>
-<p><a href="{{ url('/') }}"><i class="fas fa-home"></i></a></p>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-
-<!-- <script src="/socket.io/socket.io.js"></script> -->
-<!-- //{{ Request::getHost() }}:6001 -->
-<script src="{{ asset('js/echo.js') }}"></script>
+</body>
 </html>

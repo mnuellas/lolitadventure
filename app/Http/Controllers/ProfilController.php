@@ -174,10 +174,14 @@ class ProfilController extends Controller
   }
 
   public function change_username(Request $request) {
-    $affected = DB::table('users')
-      ->where('id', Auth::id())
-      ->update(['name' => $request['name']]);
-    return redirect(route('profil'));
+    try {
+      $affected = DB::table('users')
+        ->where('id', Auth::id())
+        ->update(['name' => $request['name']]);
+        return redirect(route('profil'));
+    } catch (Exception $error) {
+      return redirect(route('error', ['error' => $error]));
+    }
   }
 
   public function dbPost(Request $request)

@@ -29,10 +29,14 @@
 </head>
 <body>
 <p>Room</p>
+@if (count($rooms) > 0)
+        @foreach ($rooms as $room)
+            <p>{{ $room->url }}<a href="{{ route('/connectRoom/' . $room->url) }}"><button><i class="fas fa-sign-in-alt"></i></button></a></p>
+        @endforeach
+@else
+        <p>No room</p>
+@endif
+<a href="{{ route('createRoom') }}"><button >Create a new room</button></a>
 <p><a href="{{ url('/') }}"><i class="fas fa-home"></i></a></p>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-
-<!-- <script src="/socket.io/socket.io.js"></script> -->
-<!-- //{{ Request::getHost() }}:6001 -->
-<script src="{{ asset('js/echo.js') }}"></script>
+</body>
 </html>
