@@ -56,9 +56,7 @@ Route::get('/waitRoom', function() {
 Route::get('/connectRoom/{room}', function ($room) {
   return view('connectRoom', ['room_url' => $room]);
 })->name('connectRoom');
-Route::post('/connectRoom', function() {
-  return 'U';
-})->name('connectRoom');
+Route::post('/connectRoom', 'RoomController@joinRoom')->name('connectRoom');
 
 Route::get('/room', function() {
   return view('room');

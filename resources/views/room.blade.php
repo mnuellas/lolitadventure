@@ -34,5 +34,5 @@
 
 <!-- <script src="/socket.io/socket.io.js"></script> -->
 <!-- //{{ Request::getHost() }}:6001 -->
-<script src="{{ asset('js/echo.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>
 </html>

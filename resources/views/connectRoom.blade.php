@@ -33,6 +33,7 @@
 
 <div class="form-group{{ $errors->has('room_url') ? ' has-error' : '' }}">
     <label for="room_url" class="col-md-4 control-label">{{ $room_url }}</label>
+    <input id="text" type="text" class="form-control" value="{{ $room_url }}" name="room_url" required hidden>
 </div>
 
 <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">

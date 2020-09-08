@@ -28,6 +28,7 @@
     </style>
 </head>
 <body>
-<p>Room</p>
+<p>{{ $room }}</p>
+<p id="number_person">{{ $number_person }}</p>
 </body>
 </html>

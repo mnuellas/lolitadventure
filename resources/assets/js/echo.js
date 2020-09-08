@@ -6,7 +6,7 @@ let e = new Echo({
   host: window.location.hostname + ':6001'
 })
 
-e.channel('chan-demo')
-  .listen('PostCreatedEvent', function (e) {
-    console.log('PostCreatedEvent', e)
+e.channel('chan-room')
+  .listen('RoomJoinedEvent', function (e) {
+    console.log(e)
   })
