@@ -56,11 +56,11 @@ class ProfilController extends Controller
 
   public function test()
   {
-    $CarteEvent = array();
+    /*$CarteEvent = array();
     $CarteEvent[] = array("prenom" => "toto");
     $CarteEvent[] = array("prenom" => "Momo");
     $cartes = DB::table('carteevent')->get();
-    return response()->json(array('success' => true, 'event' => $cartes));
+    return response()->json(array('success' => true, 'event' => $cartes));*/
   }
 
   public function quizz()

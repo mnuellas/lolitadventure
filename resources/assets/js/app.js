@@ -13,9 +13,25 @@ let e = new Echo({
     host:window.location.hostname
 })
 
-e.channel('lolitadventure_database_chan-room')
+e.channel('room.' + room)
     .listen('RoomJoinedEvent', (e) => {
-        console.log(e);
-})
-
-console.log('je m"aime')
+        var number_personn = document.getElementById("number_person").innerHTML;
+        if (number_personn == "" || number_personn == null) { 
+            document.getElementById("number_person").innerHTML = "1"
+            number_personn = 1;
+        }
+        else {
+            number_personn = (parseInt(number_personn) + 1);
+            document.getElementById("number_person").innerHTML = "" + number_personn;
+        }
+        setTimeout(() =>{
+            $.post("https://lolitadventure.fr/someonejoined", {
+                '_token' : token,
+                room : room,
+                number_personn : number_personn
+              });
+        }, 500);
+    })
+    .listen('someoneJoined', (e) => {
+        document.getElementById("number_person").innerHTML = "" + e["number_personn"];
+    })

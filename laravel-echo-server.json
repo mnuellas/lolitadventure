@@ -1,5 +1,5 @@
 {
-	"authHost": "http://localhost",
+	"authHost": "https://lolitadventure.fr",
 	"authEndpoint": "/broadcasting/auth",
 	"clients": [
 		{
@@ -14,8 +14,8 @@
 			"databasePath": "/database/laravel-echo-server.sqlite"
 		}
 	},
-	"devMode": false,
-	"host": "51.210.40.158",
+	"devMode": true,
+	"host": null,
 	"port": "6001",
 	"protocol": "https",
 	"socketio": {},
@@ -30,7 +30,7 @@
 	},
 	"apiOriginAllow": {
 		"allowCors": true,
-		"allowOrigin": "*",
+		"allowOrigin": "http://localhost:80",
 		"allowMethods": "GET, POST",
 		"allowHeaders": "Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept, Authorization, X-CSRF-TOKEN, X-Socket-Id"
 	}

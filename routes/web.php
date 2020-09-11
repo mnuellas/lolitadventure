@@ -49,14 +49,17 @@ Route::get('/createRoom', function() {
   return view('createRoom');
 })->name('createRoom');
 Route::post('/createRoom', 'RoomController@createRoom')->name('createRoom');
-Route::get('/waitRoom', function() {
-  return view('waitRoom');
+Route::get('/waitRoom', function(Request $request) {
+  return view('waitRoom', ['url' => $request->input('url')]);
 })->middleware('checkRoomUrl')->name('waitRoom');
+
 
 Route::get('/connectRoom/{room}', function ($room) {
   return view('connectRoom', ['room_url' => $room]);
 })->name('connectRoom');
 Route::post('/connectRoom', 'RoomController@joinRoom')->name('connectRoom');
+Route::post('/someonejoined', 'RoomController@someoneJoined');
+Route::post('/everybodyhere', 'RoomController@everybodyhere');
 
 Route::get('/room', function() {
   return view('room');

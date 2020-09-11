@@ -10,19 +10,18 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RoomJoinedEvent implements ShouldBroadcast
+class EverybodyHereEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $room;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(array $room)
+    public function __construct()
     {
-        $this->room = $room;
+        //
     }
 
     /**
@@ -32,8 +31,6 @@ class RoomJoinedEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        //dd($this->room['room']);
-        return new Channel('room.' . $this->room['room']);
-        //return new PrivateChannel('channel-name');
+        return new PrivateChannel('channel-name');
     }
 }

@@ -7,6 +7,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
 
     <title>{{ config('app.name', 'Lolitadventure') }}</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
@@ -28,7 +29,23 @@
     </style>
 </head>
 <body>
-<p>{{ $room }}</p>
-<p id="number_person">{{ $number_person }}</p>
+<p>{{ $url }}</p>
+<img src="img/loader.svg" id="loaderImg" alt="chat trop kawaii qui tourne"><p id="loaderTexte">En attente de gens</p>
+<p id="number_person">1</p>
+<button onclick="Ready()">On est assez, vas y lance le jeu</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script>
+var token = "{{ Session::token() }}"
+var room = "{{ $url }}";
+function Ready() {
+    var number_personn = document.getElementById("number_person").innerHTML;
+    $.post("https://lolitadventure.fr/everybodyhere", {
+        '_token' : token,
+        room : room,
+        number_personn : number_personn
+        });
+}
+</script>
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RoomJoinedEvent implements ShouldBroadcast
+class someoneJoined implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $room;
@@ -24,7 +24,6 @@ class RoomJoinedEvent implements ShouldBroadcast
     {
         $this->room = $room;
     }
-
     /**
      * Get the channels the event should broadcast on.
      *
@@ -32,8 +31,12 @@ class RoomJoinedEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        //dd($this->room['room']);
         return new Channel('room.' . $this->room['room']);
-        //return new PrivateChannel('channel-name');
+    }
+    public function broadcastWith()
+    {
+        return [
+            "number_personn" => $this->room['number_personn']
+        ];
     }
 }
