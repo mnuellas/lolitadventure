@@ -15,7 +15,6 @@ let e = new Echo({
 
 e.channel('room.' + room)
     .listen('RoomJoinedEvent', (e) => {
-        var number_personn = document.getElementById("number_person").innerHTML;
         if (number_personn == "" || number_personn == null) { 
             document.getElementById("number_person").innerHTML = "1"
             number_personn = 1;
@@ -34,4 +33,12 @@ e.channel('room.' + room)
     })
     .listen('someoneJoined', (e) => {
         document.getElementById("number_person").innerHTML = "" + e["number_personn"];
+    })
+    .listen('EverybodyHereEvent', (e) => {
+        $.post("https://lolitadventure.fr/okredirectUs", {
+            '_token' : token,
+            room : room,
+            number_personn : number_personn
+          });
+        window.location.replace("https://lolitadventure.fr/playRoom");
     })

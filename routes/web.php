@@ -60,10 +60,16 @@ Route::get('/connectRoom/{room}', function ($room) {
 Route::post('/connectRoom', 'RoomController@joinRoom')->name('connectRoom');
 Route::post('/someonejoined', 'RoomController@someoneJoined');
 Route::post('/everybodyhere', 'RoomController@everybodyhere');
+Route::post('/okredirectUs', function(Request $request) {
+  $request->session()->put('room',  $request['room']);
+  $request->session()->put('number_personn', $request['number_personn']);
+});
+
+Route::get('/playRoom', 'RoomController@play');
 
 Route::get('/room', function() {
   return view('room');
-});
+})->name('room');
 
 Route::post('/change_user', 'ProfilController@change_username')->name('change_username');
 

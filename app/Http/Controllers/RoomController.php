@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Events\RoomJoinedEvent;
 use App\Events\someoneJoined;
+use App\Events\EverybodyHereEvent;
 
 class RoomController extends Controller
 {
@@ -46,6 +47,15 @@ class RoomController extends Controller
         return 'ok';
     }
     public function everybodyhere(Request $request) {
-        return 'ok_redirect';
+        $event = new EverybodyHereEvent(['room' => $request['room'], 'number_personn' => $request['number_personn']]);
+        event($event);
+        return 'ok';
+    }
+    public function play(Request $request) {
+        if ($request->session()->has('room') && $request->session()->has('number_personn')) {
+            return view('room', ['room' => $request->session()->get('room'), 'players'  => $request->session()->get('number_personn')]);
+        } else {
+            return redirect('error');
+        }
     }
 }

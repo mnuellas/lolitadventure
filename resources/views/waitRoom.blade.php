@@ -36,14 +36,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 <script>
 var token = "{{ Session::token() }}"
+var number_personn = document.getElementById("number_person").innerHTML;
 var room = "{{ $url }}";
 function Ready() {
-    var number_personn = document.getElementById("number_person").innerHTML;
     $.post("https://lolitadventure.fr/everybodyhere", {
         '_token' : token,
         room : room,
         number_personn : number_personn
-        });
+    });
 }
 </script>
 <script src="{{ asset('js/app.js') }}"></script>
