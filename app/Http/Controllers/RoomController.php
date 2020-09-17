@@ -53,6 +53,7 @@ class RoomController extends Controller
     }
     public function play(Request $request) {
         if ($request->session()->has('room') && $request->session()->has('number_personn')) {
+            //$request->session()->forget(['room', 'number_personn']);
             return view('room', ['room' => $request->session()->get('room'), 'players'  => $request->session()->get('number_personn')]);
         } else {
             return redirect('error');
