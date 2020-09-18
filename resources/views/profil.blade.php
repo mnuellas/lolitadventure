@@ -134,7 +134,6 @@
           count_check++;
       }
       if (count_check == 0) {
-        console.log("error");
         deck[0].click();
       } else {
         AjaxrequestProfil('add_deck', play)

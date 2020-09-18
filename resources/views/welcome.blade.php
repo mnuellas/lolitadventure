@@ -38,7 +38,7 @@
         	 </div>
         	<div id="menu" class="col">
         		<div id="map">
-					<div class="flag-span"><a href="/{{ url('/fr') }}"><img src="img/fr.png" class="flag"></a><a href="{{ url('/en') }}"><img src="img/gb.png" class="flag"></a></div>
+					<div class="flag-span"><a href="{{ route('fr') }}"><img src="img/fr.png" class="flag"></a><a href="{{ route('en') }}"><img src="img/gb.png" class="flag"></a></div>
 					<div class="line" id="higher"></div>
 					@guest
 						<a href="{{ route('login') }}" class="mapA"><i class="fas fa-fw fa-scroll iconL"></i> {{ __('main.login') }} <i class="fas fa-fw fa-scroll iconR"></i></a>

@@ -28,6 +28,7 @@
     </style>
 </head>
 <body>
+<h6><bold>/!\Attention, à partir de ce point, nous partons du principe que vous avez déjà choisi votre langue, une fois connecté à la chambre, vous ne pourrez plus la changer/!\</bold></h6>
 <form class="form-horizontal" method="POST" action="{{ route('connectRoom') }}">
 {{ csrf_field() }}
 

@@ -28,13 +28,13 @@
 <body>
         <div id="winDiv" style="display:none">
         	<div class="centerWin">
-        		<p>{{ __('main.game.winner') }}</p>
-        		<p>{{ __('main.game.visitFB') }}</p>
+        		<p>{{ __('main.gameOnline.winner') }}</p>
+        		<p>{{ __('main.gameOnline.visitFB') }}</p>
         		<p>Facebook : <a href="https://www.facebook.com/lolitadventure/">Lolitadventure</a></p>
         	</div>
         	<div class="buttonWin">
-        		<button onclick="Reset()"><p>{{ __('main.game.reload') }}</p> {{ __('main.game.notSafe') }}</button>
-        		<button onclick="HardReset()"><p>{{ __('main.game.safeReload') }}</p>{{ __('main.game.useData') }}</button>
+        		<button onclick="Reset()"><p>{{ __('main.gameOnline.reload') }}</p> {{ __('main.gameOnline.notSafe') }}</button>
+        		<button onclick="HardReset()"><p>{{ __('main.gameOnline.safeReload') }}</p>{{ __('main.gameOnline.useData') }}</button>
         	</div>
         </div>
         <div id="loader" style="z-index:20; text-align: center;">
@@ -61,36 +61,6 @@
         			<canvas id="c"></canvas>
         		  </section>
         	 </div>
-        	<div id="menu" class="col">
-        		<div id="map">
-					<div class="flag-span"><a href="/{{ url('/fr') }}"><img src="img/fr.png" class="flag"></a><a href="{{ url('/en') }}"><img src="img/gb.png" class="flag"></a></div>
-					<div class="line" id="higher"></div>
-					@guest
-						<a href="{{ route('login') }}" class="mapA"><i class="fas fa-fw fa-scroll iconL"></i> {{ __('main.login') }} <i class="fas fa-fw fa-scroll iconR"></i></a>
-					<div class="line"></div>
-						<a href="{{ route('register') }}" class="mapA"><i class="fas fa-fw fa-heart iconL"></i> {{ __('main.register') }} <i class="fas fa-fw fa-heart iconR"></i></a>
-					<div class="line"></div>
-					@endguest
-					@auth
-					<a href="{{ route('profil') }}" class="mapA"><i class="fas fa-fw fa-hat-wizard iconL"></i> {{ __('main.profil') }} <i class="fas fa-fw fa-hat-wizard iconR"></i></a>
-					<div class="line"></div>
-					@endauth
-						<a href="{{ route('lexicon') }}" class="mapA" target="_blank"><i class="fa fa-fw fa-envelope iconL"></i> {{ __('main.lexicon') }} <i class="fas fa-fw fa-envelope iconR"></i></a>
-					<div class="line"></div>
-					<div id="shop">
-						<a href="{{ route('shop') }}" class="mapA"><i class="fa fa-fw fa-chess-queen iconL"></i> {{ __('main.shop') }} <i class="fas fa-fw fa-chess-queen iconR"></i></a>
-					<div class="line shopHover"></div>
-					<a href="{{ route('digital shop') }}" class="shopHover"><i class="fa fa-fw fa-chess-pawn iconL"></i>{{ __('main.Eshop') }}<i class="fa fa-fw fa-chess-pawn iconR"></i></a>
-					<div class="line shopHover"></div>
-					<a href="{{ route('boards shop') }}" class="shopHover"><i class="fa fa-fw fa-dice iconL"></i>{{ __('main.plateau') }}<i class="fa fa-fw fa-dice iconR"></i></a>
-              		</div>
-        		</div>
-        		<div id="PP">
-					<p id="tourp">{{ __('main.turn') }}<span id="tour"> Joueuse 1</span></p>
-				</div>
-        		<ul id="ulProfil">
-        		</ul>
-        	</div>
         </div>
         <div id="preload" style="display:none">
       @foreach ($action as $carte)
@@ -102,7 +72,8 @@
 	  </div>
 <script>
 	var plateauURL = "{{ url('/images/sets/plateau/' . $plateau . '/plateau.png') }}";
-	var pionURL = "{{ $plateau }}";
+    var pionURL = "{{ $plateau }}";
+    var room = "{{ $room }}";
 </script>
 		</body>
 
@@ -112,42 +83,42 @@
     <!-- <script src="{{ asset(join('', array('js/carte', strtoupper(app()->getLocale()), '.js'))) }}"></script> -->
     <script src="{{ asset('js/echo.js') }}"></script>
     <script>
-    var remainingTurns = "{{ __('main.game.remainingTurns') }}";
-    var hitSpacebar = "{{ __('main.game.hitSpacebar') }}";
-    var remaingSpacebarHits1 = "{{ __('main.game.remainingSpacebarHits1') }}";
-    var remaingSpacebarHits2 = "{{ __('main.game.remainingSpacebarHits2') }}";
+    var remainingTurns = "{{ __('main.gameOnline.remainingTurns') }}";
+    var hitSpacebar = "{{ __('main.gameOnline.hitSpacebar') }}";
+    var remaingSpacebarHits1 = "{{ __('main.gameOnline.remainingSpacebarHits1') }}";
+    var remaingSpacebarHits2 = "{{ __('main.gameOnline.remainingSpacebarHits2') }}";
     var lang = "{{ app()->getLocale() }}";
     var Tuto = {
-      0 : "<p><span class=\"tutoTitle\">{{ __('main.game.tuto.1') }}</span><br />{{ __('main.game.tuto.2') }}<br />{{ __('main.game.tuto.3') }}\
+      0 : "<p><span class=\"tutoTitle\">{{ __('main.gameOnline.tuto.1') }}</span><br />{{ __('main.gameOnline.tuto.2') }}<br />{{ __('main.gameOnline.tuto.3') }}\
     		<address>Email : <a href=\"mailto:lolitadventure.fr@gmail.com\">m.imagianne@gmail.com</a><br />Facebook : <a href=\"https://www.facebook.com/lolitadventure\">Lolitadventure</a>\
-    		</address><br />{{ __('main.game.tuto.4') }}<br />{{ __('main.game.tuto.5') }}<br />{{ __('main.game.tuto.6') }}<br />\
-    	{{ __('main.game.tuto.7') }}<br /> 	{{ __('main.game.tuto.8') }}<br />{{ __('main.game.tuto.9') }}<br />{{ __('main.game.tuto.10') }}</p><button id=\"clickMe\">{{ __('main.game.tuto.11') }}</button>",
-    	1 : "{{ __('main.game.tuto.12') }}<br />{{ __('main.game.tuto.13') }}<br />{{ __('main.game.tuto.14') }}<br /><input id=\"nb_player\" value=1 type=\"number\"><button id='clickMe'>{{  __('main.game.tuto.15') }}</button>",
-    	2 : "<h2 style='color:#fc97b5'>Tutoriel</h2><p>{{ __('main.game.tuto.16') }}<br /></p><button id='clickMe'>{{ __('main.game.tuto.17') }}</button>",
-    	3 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.game.tuto.18') }}<br />\
-    		{{ __('main.game.tuto.19') }}<br />{{ __('main.game.tuto.20') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Event/" + lang + "/Event1.png'></div>\
-    		<button id='clickMe'>{{ __('main.game.tuto.21') }} ♥</button>",
-    	4 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.game.tuto.22') }}<br />\
-    		{{ __('main.game.tuto.23') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='img/Quizz.png'></div>\
-    		<button id='clickMe'>{{ __('main.game.tuto.21') }} ♪♫</button>",
-    	5 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.game.tuto.24') }}<br />\
-    		{{ __('main.game.tuto.25') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Actions/" + lang + "/Action1.png'></div>\
-    		<button id='clickMe'>{{ __('main.game.tuto.26') }}</button>",
-    	6 : "<div style='display: flex;flex-direction:row;justify-content:space-around; align-items: center;'><div style='max-width:50%'><p>{{ __('main.game.tuto.27') }}<br />{{ __('main.game.tuto.28') }}<br />\
-    		{{ __('main.game.tuto.29') }}<br />{{ __('main.game.tuto.30') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Actions/" + lang + "/Action1.png'></div>\
-    		<button id='clickMe'>{{ __('main.game.tuto.31') }}</button>",
-    	7 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.game.tuto.32') }}<br />\
-    		{{ __('main.game.tuto.33') }}<br />{{ __('main.game.tuto.34') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Actions/" + lang + "/Action12.png'></div>\
-    		<button id='clickMe'>{{ __('main.game.tuto.35') }}</button>",
-    	8 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.game.tuto.36') }}<br />\
-    		{{ __('main.game.tuto.37') }}<br />{{ __('main.game.tuto.38') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Actions/" + lang + "/Action9.png'></div>\
-    		<button id='clickMe'>{{ __('main.game.tuto.39') }}</button>",
-    	9 : "<div style='display:flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.game.tuto.40') }}<br />\
-    		{{ __('main.game.tuto.41') }}<br />{{ __('main.game.tuto.42') }}<br />\
-    		{{ __('main.game.tuto.43') }}<br /></p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Actions/" + lang + "/Action12.png'></div>\
-    		<button id='clickMe'>{{ __('main.game.tuto.44') }}</button>",
-      10 : "<div style='display:flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.game.tuto.45') }}<br /></div></div>\
-        <button id='clickMe'>{{ __('main.game.tuto.46') }}</button>",
+    		</address><br />{{ __('main.gameOnline.tuto.4') }}<br />{{ __('main.gameOnline.tuto.5') }}<br />{{ __('main.gameOnline.tuto.6') }}<br />\
+    	{{ __('main.gameOnline.tuto.7') }}<br /> 	{{ __('main.gameOnline.tuto.8') }}<br />{{ __('main.gameOnline.tuto.9') }}<br />{{ __('main.gameOnline.tuto.10') }}</p><button id=\"clickMe\">{{ __('main.gameOnline.tuto.11') }}</button>",
+    	1 : "{{ __('main.gameOnline.tuto.12') }}<br />{{ __('main.gameOnline.tuto.13') }}<br />{{ __('main.gameOnline.tuto.14') }}<br /><input id=\"nb_player\" value=1 type=\"number\"><button id='clickMe'>{{  __('main.gameOnline.tuto.15') }}</button><button class=\"skipMe\" click=\"skipTuto()\">{{  __('main.gameOnline.tuto.15b') }}</button>",
+    	2 : "<h2 style='color:#fc97b5'>Tutoriel</h2><p>{{ __('main.gameOnline.tuto.16') }}<br /></p><button id='clickMe'>{{ __('main.gameOnline.tuto.17') }}</button>",
+    	3 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.gameOnline.tuto.18') }}<br />\
+    		{{ __('main.gameOnline.tuto.19') }}<br />{{ __('main.gameOnline.tuto.20') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Event/" + lang + "/Event1.png'></div>\
+    		<button id='clickMe'>{{ __('main.gameOnline.tuto.21') }} ♥</button>",
+    	4 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.gameOnline.tuto.22') }}<br />\
+    		{{ __('main.gameOnline.tuto.23') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='img/Quizz.png'></div>\
+    		<button id='clickMe'>{{ __('main.gameOnline.tuto.21') }} ♪♫</button>",
+    	5 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.gameOnline.tuto.24') }}<br />\
+    		{{ __('main.gameOnline.tuto.25') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Actions/" + lang + "/Action1.png'></div>\
+    		<button id='clickMe'>{{ __('main.gameOnline.tuto.26') }}</button>",
+    	6 : "<div style='display: flex;flex-direction:row;justify-content:space-around; align-items: center;'><div style='max-width:50%'><p>{{ __('main.gameOnline.tuto.27') }}<br />{{ __('main.gameOnline.tuto.28') }}<br />\
+    		{{ __('main.gameOnline.tuto.29') }}<br />{{ __('main.gameOnline.tuto.30') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Actions/" + lang + "/Action1.png'></div>\
+    		<button id='clickMe'>{{ __('main.gameOnline.tuto.31') }}</button>",
+    	7 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.gameOnline.tuto.32') }}<br />\
+    		{{ __('main.gameOnline.tuto.33') }}<br />{{ __('main.gameOnline.tuto.34') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Actions/" + lang + "/Action12.png'></div>\
+    		<button id='clickMe'>{{ __('main.gameOnline.tuto.35') }}</button>",
+    	8 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.gameOnline.tuto.36') }}<br />\
+    		{{ __('main.gameOnline.tuto.37') }}<br />{{ __('main.gameOnline.tuto.38') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Actions/" + lang + "/Action9.png'></div>\
+    		<button id='clickMe'>{{ __('main.gameOnline.tuto.39') }}</button>",
+    	9 : "<div style='display:flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.gameOnline.tuto.40') }}<br />\
+    		{{ __('main.gameOnline.tuto.41') }}<br />{{ __('main.gameOnline.tuto.42') }}<br />\
+    		{{ __('main.gameOnline.tuto.43') }}<br /></p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Actions/" + lang + "/Action12.png'></div>\
+    		<button id='clickMe'>{{ __('main.gameOnline.tuto.44') }}</button>",
+      10 : "<div style='display:flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.gameOnline.tuto.45') }}<br /></div></div>\
+        <button id='clickMe'>{{ __('main.gameOnline.tuto.46') }}</button>",
     }
     </script>
   </footer>
