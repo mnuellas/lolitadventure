@@ -1,0 +1,112 @@
+/* Add a black background color to the top navigation */
+body {
+  margin: 0;
+  background-color: #fffbba;
+}
+
+@font-face {
+  font-family: "Courgette";
+  src:url("/fonts/Courgette-Regular.ttf");
+}
+
+main {
+  width: 100%;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  margin: auto;
+  font-family: "Courgette";
+  background-color: white;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 5px dotted pink;
+  max-width: 55%;
+}
+
+section h4 {
+  text-align: center;
+  font-size: 24px;
+  color: pink;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+#sets_div {
+  display: flex;
+}
+
+.set_div {
+  width: 250px;
+  text-align: center;
+  margin: 10px;
+}
+
+.set_div img {
+  width: 100%;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.info button  {
+  font-family: "Courgette";
+  padding: 6px;
+  background-color: pink;
+  border: pink solid;
+  border-radius: 10px;
+}
+
+.info button:hover {
+  color: white;
+  border: #fffbba dotted 5px;
+  /* -webkit-box-shadow: 17px 10px 22px -6px rgba(0,0,0,0.53);
+-moz-box-shadow: 17px 10px 22px -6px rgba(0,0,0,0.53);
+box-shadow: 17px 10px 22px -6px rgba(0,0,0,0.53); */
+}
+
+.form-horizontal {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn {
+  font-family: "Courgette";
+  padding: 6px;
+  background-color: pink;
+  border: pink solid;
+  border-radius: 10px;
+  margin-top: 3px;
+}
+
+.btn:hover {
+  color: white;
+  border: #fffbba dotted 5px;
+  /* -webkit-box-shadow: 17px 10px 22px -6px rgba(0,0,0,0.53);
+-moz-box-shadow: 17px 10px 22px -6px rgba(0,0,0,0.53);
+box-shadow: 17px 10px 22px -6px rgba(0,0,0,0.53); */
+}
+
+.form-group {
+  display: flex;
+}
+
+.form-group input {
+  border: 1px solid pink;
+    border-radius: 5px;
+    padding: 3px;
+    margin-left: 5px;
+}

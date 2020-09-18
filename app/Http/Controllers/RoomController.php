@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use App\Events\RoomJoinedEvent;
@@ -14,6 +15,40 @@ class RoomController extends Controller
     public function selectRoom() {
         $rooms = DB::table("rooms")->get();
         return view('chooseRoom', ['rooms' => $rooms]);
+    }
+
+    public function getLang() {
+        if(session()->exists('lang')) {
+          return session('lang');
+        } else {
+          return app()->getLocale();
+        }
+      }
+
+    public function createRoomView() {
+        //TODO faire ça en un seul return quand t'as le temps en jouant avec set = basic de base
+        $sets = ['basic'];
+        $privilege = ['basic'];
+        $defaultSet = 'basic';
+        $playing = ['basic'];
+        if (Auth::check()) {
+            $user = DB::table("users")->where('id', '=', Auth::id())->get();
+            $sets = array();
+            $privilege = array();
+            foreach(explode(",", $user[0]->sets) as $set) {
+              array_push($sets, DB::table("sets")->where('name', '=', $set)->get());
+            }
+              $sets = explode(",", $user[0]->sets);
+              $privilege = explode(",", $user[0]->privileges);
+              $defaultSet = $user[0]->DefaultBackground;
+              $playing = explode(",", $user[0]->playing);
+        }
+        return view('createRoom', [
+            'sets' => $sets,
+            'privileges' => $privilege,
+            'defaultSet' => $defaultSet,
+            'playing' => $playing
+        ]);
     }
 
     public function createRoom(Request $request) {
@@ -54,7 +89,18 @@ class RoomController extends Controller
     public function play(Request $request) {
         if ($request->session()->has('room') && $request->session()->has('number_personn')) {
             //$request->session()->forget(['room', 'number_personn']);
-            return view('room', ['room' => $request->session()->get('room'), 'players'  => $request->session()->get('number_personn')]);
+            $lang = RoomController::getLang();//app()->getLocale();
+            app()->setLocale($lang);
+            $room = DB::table('rooms')->where('url', '=', $request->session()->get('room'))->get();
+            $plateau = $room[0]->plateau;
+            $collection = explode(",", $room[0]->collection);
+            $cartesEvent = DB::table('carteevent')
+                ->whereIn('collection', $collection)
+                ->get();
+            $cartesAction = DB::table('carteaction')
+                ->whereIn('collection', $collection)
+                ->get();
+            return view('room', ['room' => $request->session()->get('room'), 'players'  => $request->session()->get('number_personn'), 'action' => $cartesAction, 'event' => $cartesEvent, 'lang' => $lang, 'plateau' => $plateau]);
         } else {
             return redirect('error');
         }

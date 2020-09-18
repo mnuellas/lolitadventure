@@ -29,12 +29,12 @@ Route::get('/shop', function() {
 Route::get('/fr', function() {
   session(['lang' => 'fr']);
   return redirect('home');
-});
+})->name('fr');
 
 Route::get('/en', function() {
   session(['lang' => 'en']);
   return redirect('home');
-});
+})->name('en');
 
 Route::get('/digitalShop', function() {
   return view('digitalShop');
@@ -45,9 +45,7 @@ Route::get('/boardShop', function() {
 })->name('boards shop');
 
 Route::get('/chooseRoom', 'RoomController@selectRoom')->name('chooseRoom');
-Route::get('/createRoom', function() {
-  return view('createRoom');
-})->name('createRoom');
+Route::get('/createRoom', 'RoomController@createRoomView')->name('createRoom');
 Route::post('/createRoom', 'RoomController@createRoom')->name('createRoom');
 Route::get('/waitRoom', function(Request $request) {
   return view('waitRoom', ['url' => $request->input('url')]);
