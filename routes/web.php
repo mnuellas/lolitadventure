@@ -55,13 +55,17 @@ Route::get('/waitRoom', function(Request $request) {
 Route::get('/connectRoom/{room}', function ($room) {
   return view('connectRoom', ['room_url' => $room]);
 })->name('connectRoom');
+
 Route::post('/connectRoom', 'RoomController@joinRoom')->name('connectRoom');
 Route::post('/someonejoined', 'RoomController@someoneJoined');
 Route::post('/everybodyhere', 'RoomController@everybodyhere');
 Route::post('/okredirectUs', function(Request $request) {
   $request->session()->put('room',  $request['room']);
   $request->session()->put('number_personn', $request['number_personn']);
+  $request->session()->put('player_nbr', $request["player_number"]);
+  return 'ok';
 });
+Route::post('/finishedTuto', 'RoomController@finishedTuto');
 
 Route::get('/playRoom', 'RoomController@play');
 
