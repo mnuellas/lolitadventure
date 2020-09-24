@@ -60,7 +60,14 @@
         		<section id="canvasSection" style="height: 100%; width:100%">
         			<canvas id="c"></canvas>
         		  </section>
-        	 </div>
+			 </div>
+			 <div id="menu" class="col">
+        		<div id="PP">
+					<p id="tourp">{{ __('main.turn') }}<span id="tour"> Joueuse 1</span></p>
+				</div>
+        		<ul id="ulProfil">
+        		</ul>
+        	</div>
         </div>
         <div id="preload" style="display:none">
       @foreach ($action as $carte)

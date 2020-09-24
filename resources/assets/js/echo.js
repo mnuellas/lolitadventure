@@ -598,7 +598,6 @@ function CreatePlateau()
 }
 
 function Init() {
-	console.log('init')
 	$("#cache").show();
 	$("#carte").hide();
 	CreatePlateau();
@@ -631,14 +630,14 @@ function CreatePion(pionNumber) {
 		canvas.add(pion);
 	});
 	//creation profil le truc sur le coté
-	profil = document.createElement("li");
+	var profil = document.createElement("li");
 
 /************************************************************************************************ */
 /************************************************************************************************ */
 /************************************************************************************************ */
 // MODIF ICI
 
-	$(profil).html("<p><span id='span_j_"+(pionNumber + 1)+"' onclick='rename("+(pionNumber + 1)+")'>Joueuse "+ (pionNumber + 1) +"</span><br /><span id='span" + (pionNumber + 1) +"'></span>\
+	$(profil).html("<p><span id='span_j_"+ (pionNumber + 1)+"' onclick='rename("+(pionNumber + 1)+")'>Joueuse "+ (pionNumber + 1) +"</span><br /><span id='span" + (pionNumber + 1) +"'></span>\
 	</p><input type='text' class='input_name' id='input_j_"+(pionNumber + 1)+"' value='Joueuse "+ (pionNumber + 1) +"' style='height:26px;border:1px dotted grey; background-color:pink;border-radius:10px 10px;font-size:16px;'><img src='https://lolitadventure.fr/images/sets/pion_profil/" + pionURL + "/pion" + (pionNumber + 1) + ".png'>");
 	$("#ulProfil").append(profil);
 // FIN MODIF ICI
@@ -652,7 +651,9 @@ function CreatePion(pionNumber) {
 }
 
 function skipTuto() {
-  $("#welcomeDiv").hide();
+	for (var k = 0; k < Jeu.nb_player; k++)
+		CreatePion(k);
+	$("#welcomeDiv").hide();
 	pions.sort(function(a, b){return a.pionNumber - b.pionNumber})
 	finishedTuto();
 }
@@ -673,7 +674,8 @@ function Tutorial(i)
 	{
 		if (i == 1)
 		{
-			Jeu.nb_player = $("#nb_player").val();
+			console.log(Jeu.nb_player);
+			//Jeu.nb_player = $("#nb_player").val();
 			if (Jeu.nb_player <= 0 || Jeu.nb_player > 15) {
 				Tutorial(i);//On va essayer de throw une erreur
 			}
@@ -698,6 +700,7 @@ function finishedTuto() {
 
 function ThrowDice()
 {
+	console.log('trowy')
 	$("#de").on("click", function() {
 		$("#de").off("click");
 		var deName = Math.floor(Math.random() * (7 - 1) + 1);
@@ -741,6 +744,7 @@ function animateDice(deName) {
 
 function Play(de)
 {
+	de = parseInt(de);
 	if(pions[Jeu.i % Jeu.nb_player].id + de < (plateau.length - 1))
 	{
 		MovePion(plateau[pions[Jeu.i % Jeu.nb_player].id + de], pions[Jeu.i % Jeu.nb_player]);
@@ -762,6 +766,15 @@ function Play(de)
 		{
 		MovePion(plateau[plateau.length - 1], pions[Jeu.i % Jeu.nb_player]);
 		Win();
+	}
+}
+
+function nextTurn() {
+	showDice();
+	console.log(Jeu.i, Jeu.nb_player, player_number)
+	if (Jeu.i % Jeu.nb_player == player_number) {
+		console.log('throw')
+		ThrowDice();
 	}
 }
 
@@ -929,13 +942,14 @@ function PlayEvent(){//ici on montre juste la carte, attends que le joueur appui
 }
 
 function playCardEvent(cardNumber) {
+	console.log('appel')
 	var temps = MovePion(plateau[pions[Jeu.i % Jeu.nb_player].id + CarteEvent[cardNumber].value], pions[Jeu.i % Jeu.nb_player]);
-	setTimeout(ThrowDice, 1000 * (Math.abs(CarteEvent[cardNumber].value) + 0.5)); //On attends 1s * le nombre de case avancée
+	setTimeout(nextTurn, 1000 * (Math.abs(CarteEvent[cardNumber].value) + 0.5)); //On attends 1s * le nombre de case avancée
 	$("#carte").hide();
 	$("#cache").hide();
 }
 
-function showCardEvent(carNumber) {
+function showCardEvent(cardNumber) {
 	$("#carte").attr('src', document.getElementById(CarteEvent[cardNumber].url).src);
 	$("#carte").attr('alt', CarteEvent[cardNumber].texte);
 	$("#carte").show();
