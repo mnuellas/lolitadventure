@@ -11,6 +11,8 @@ use App\Events\someoneJoined;
 use App\Events\EverybodyHereEvent;
 use App\Events\finishedTutoEvent;
 use App\Events\throwDiceEvent;
+use App\Events\playCardEvent;
+use App\Events\playedEventEvent;
 
 class RoomController extends Controller
 {
@@ -123,6 +125,16 @@ class RoomController extends Controller
 
     public function throwDice(Request $request) {
         $event = new throwDiceEvent(['room' => $request['room'], 'de' => $request['de'], 'player_number' => $request["player_number"]]);
+        event($event);
+    }
+
+    public function playCard(Request $request) {
+        $event = new playCardEvent(['room' => $request['room'], 'card' => $request['card'], 'type' => $request["type"]]);
+        event($event);
+    }
+
+    public function playedEvent(Request $request) {
+        $event = new playedEventEvent(['room' => $request['room'], 'card' => $request['card']]);
         event($event);
     }
 }

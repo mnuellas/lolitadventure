@@ -67,6 +67,8 @@ Route::post('/okredirectUs', function(Request $request) {
 });
 Route::post('/finishedTuto', 'RoomController@finishedTuto');
 Route::post('/throwDice', 'RoomController@throwDice');
+Route::post('/playCard', 'RoomController@playCard');
+Route::post('/playedEvent', 'RoomController@playedEvent');
 
 Route::get('/playRoom', 'RoomController@play');
 

@@ -19,6 +19,15 @@ e.channel('room.' + room)
   .listen('throwDiceEvent', (e) => {
 	animateDice(e["de"]);
   })
+  .listen('playCardEvent', (e) => {
+	  switch(e["type"]) {
+		  case "Event" :
+			showCardEvent(e["card"])
+	  }
+  })
+  .listen('playedEventEvent', (e) => {
+	playCardEvent(e["card"]);
+  })
 
 var Jeu = {
 	nb_player: number_players,
@@ -728,4 +737,324 @@ function animateDice(deName) {
 		}, 1500);
 		$("#cache").hide();
 	}, 1000);
+}
+
+function Play(de)
+{
+	if(pions[Jeu.i % Jeu.nb_player].id + de < (plateau.length - 1))
+	{
+		MovePion(plateau[pions[Jeu.i % Jeu.nb_player].id + de], pions[Jeu.i % Jeu.nb_player]);
+		for (var i = 0; i < Jeu.carteTour.length; i++)//On enlève des tours au cartes tours
+		{
+			Jeu.carteTour[i][0]--;
+			if(Jeu.carteTour[i][0] == 0)
+			{
+				$(Jeu.carteTour[i][1]).remove();
+				Jeu.carteTour.splice(i, 1);
+				i--;
+			} else {
+				$(Jeu.carteTour[i][1]).html(remainingTurns + Jeu.carteTour[i][0]);
+			}
+		}
+		setTimeout(PlayCard, 1000 * de, plateau[pions[Jeu.i % Jeu.nb_player].id + de].id - 1);
+	}
+	else
+		{
+		MovePion(plateau[plateau.length - 1], pions[Jeu.i % Jeu.nb_player]);
+		Win();
+	}
+}
+
+function MovePion(to, pion)
+{
+	if(to != undefined)//Si on va sur une case sur le plateau
+	{
+		if(pion.id != to.id){//Tant que nous ne sommes pas sur la case voulue
+			pion.id += (to.id - pion.id) / Math.abs(to.id - pion.id);//On se déplace d'une case
+			pion.animate('top', plateau[pion.id].top, { onChange: canvas.renderAll.bind(canvas) });//donc on prends le top de la case d'à côté
+			pion.animate('left', plateau[pion.id].left, { onChange: canvas.renderAll.bind(canvas) });//Et son left
+			setTimeout(MovePion, 1000, to, pion);//Puis on verifie que ce n'est pas la case surlaquelle on voulait aller
+		} else
+			return to.id; //Si c'est bien la case, on renvoie son numéro
+	} else {
+		if (pion.id <= 55 && pion.id >= 48) {
+			MovePion(plateau[plateau.length - 1], pions[Jeu.i % Jeu.nb_player]);
+			Win();
+		}
+		else
+			MovePion(plateau[0], pion);//Si on recule trop, on recommence au début
+	}
+}
+
+function PlayCard(cardId)
+{
+	$("#cache").show();
+	if (Jeu.i % Jeu.nb_player == player_number) {
+		// switch(Cases[cardId].carte)
+		// {
+		// 	case "Action" :
+		// 		PlayAction();
+		// 		break;
+		// 	case "Event" :
+		// 		PlayEvent();
+		// 		break;
+		// 	case "Quizz" :
+		// 		PlayQuizz();
+		// 		break;
+		// }
+		PlayEvent();
+	}
+}
+
+function PlayAction()
+{
+	var cardNumber = parseInt(Math.random() * (CarteAction.length - 1));//On prends une carte random dans le tableau
+	$("#carte").attr('src', document.getElementById(CarteAction[cardNumber].url).src);//On transforme notre img en cette carte
+	$("#carte").attr('alt', CarteAction[cardNumber].texte);//(et le alt aussi pour les malentendants)
+	$("#carte").show();//Puis on la montre
+	$("#QuizzDiv").hide();//Bug bizarre corrigé
+	switch(CarteAction[cardNumber].type)//Selon le type de la carte on a différentes réactions
+	{
+		case "defi" ://Le défi, on doit faire une certaine action un certains nombre de fois, ainsi, on affichera un écran pour montrer combien de fois il reste et les joueuses cliqueront/barspacerons à chauqe fois
+			$("#carte").on("click", function(){//Au click
+					$("#carte").off("click");//On désactive le fait que l'on puisse cliquer (Je sais c'est bizarre mais ça permet de pas avoir 3000 fct bindées)
+					$("#carte").hide();//on cache la carte et on montre l'action
+					$("#ActionDiv").show();//On  affiche l'ecran
+					$("#ActionDiv").html(hitSpacebar + "<br />" + remaingSpacebarHits1 + CarteAction[cardNumber].value + remaingSpacebarHits2);
+					CarteAction[cardNumber].nombreinitial = CarteAction[cardNumber].value;
+					$("#ActionDiv").on("click", function(){
+						LessAction(CarteAction[cardNumber]);//A chaque fois qu'on click, on doit faire l'action en moins
+					});
+					$(document).on("keyup", function(event){ //sinon on peut spacebar
+						if(event.which == 32)
+							LessAction(CarteAction[cardNumber]);//Sachant que l'on off le spacebar dans LessAction
+					});
+			});
+		break;
+		case "tour" :
+		case "minuteur" ://minuteur et tour fonctionne pareil, on va afficher sur le profil de la joueuse combien de temps / tours il lui reste à faire son action
+			$("#carte").on("click", function()
+			{
+				$("#carte").off("click");
+				$("#carte").hide();
+				$("#cache").hide();
+				ThrowDice();
+				let jeu =  Jeu.i % Jeu.nb_player
+				if (jeu == 0)
+					jeu = Jeu.nb_player;
+				ActionMinuteur(cardNumber, "#span" + jeu);//On lié une ation minuteur au profil (donc la span) de la joueuse
+			});
+		break;
+	}
+	$(".carte").show();
+}
+
+function ActionMinuteur(cardNumber, span)
+{
+	var span2;
+	if($(span).html().length == 0)//si on a pas deja cette span
+	{
+		//on lui rajoute un hover, une merch sympa pour rappeler aux joueuses quels
+		//défis elles ont.
+		$(span).hover(function(){
+			var defiImg = document.createElement("img");
+			defiImg.id = "defiImg";
+			defiImg.style.zIndex = 100;
+			defiImg.src = document.getElementById(CarteAction[cardNumber].url).src;
+			defiImg.classList.add("carteDefi");
+			$("body").append(defiImg);
+		}, function(){
+			$("#defiImg").remove();
+		});
+
+		if(CarteAction[cardNumber].type == "minuteur")
+		{
+			//on rajoute un compteur qui sera afficher dans la span
+			t(CarteAction[cardNumber].value, span);
+		} else {
+			$(span).html(remainingTurns + CarteAction[cardNumber].value+ "<br />");
+			Jeu.carteTour.push([CarteAction[cardNumber].value, span]);
+		}
+
+		if(CarteAction[cardNumber].espionnage != 0)
+		{//on rajoute la fonction espionnage
+			Jeu.espionnee.span = (Jeu.i % Jeu.nb_player) - 1;
+			if (Jeu.espionnee.span == -1)
+				Jeu.espionnee.span = 0;
+			$(span).click(function(){//Si l'espionnage s'effectue on recule de deux cases
+				MovePion(plateau[pions[Jeu.espionnee.span].id - 2], pions[Jeu.espionnee.span]);
+			});
+		}
+	} else {//sinon on va creer une nouvelle span
+		span2 = document.createElement("span");
+		span2.id = "span" + (Jeu.i + Jeu.nb_player);//remplacer par nb
+		$(span).after(span2);
+		ActionMinuteur(cardNumber, span2);
+	}
+}
+
+function LessAction(card){
+	if(card.value > 1)//Si on dois encore faire l'action
+	{
+		card.value--;//On enlève et on rafraichit
+		$("#ActionDiv").html("<p>" + hitSpacebar + "<br />" + remaingSpacebarHits1 + card.value + remaingSpacebarHits2);
+	}
+	else
+	{
+		$("#ActionDiv").hide(); //Sinon c'est terminé et on cache l'écran
+		$("#cache").hide();
+		card.value = card.nombreinitial;
+		$("#ActionDiv").off("click");//Et on debind tous les espions
+		$(document).off("keyup");
+		setTimeout(ThrowDice, 250);
+	}
+}
+
+function PlayEvent(){//ici on montre juste la carte, attends que le joueur appuie dessus et applique l'effet
+	var cardNumber = parseInt(Math.random() * (CarteEvent.length - 1));
+	$.post("https://lolitadventure.fr/playCard", {
+		'_token' : $('meta[name="csrf-token"]').attr("content"),
+		card : cardNumber,
+		room : room,
+		type : "Event"
+	});
+	$("#carte").on("click", function() {
+		$.post("https://lolitadventure.fr/playedEvent", {
+			'_token' : $('meta[name="csrf-token"]').attr("content"),
+			card : cardNumber,
+			room : room,
+		});
+		$("#carte").off("click");
+	});
+}
+
+function playCardEvent(cardNumber) {
+	var temps = MovePion(plateau[pions[Jeu.i % Jeu.nb_player].id + CarteEvent[cardNumber].value], pions[Jeu.i % Jeu.nb_player]);
+	setTimeout(ThrowDice, 1000 * (Math.abs(CarteEvent[cardNumber].value) + 0.5)); //On attends 1s * le nombre de case avancée
+	$("#carte").hide();
+	$("#cache").hide();
+}
+
+function showCardEvent(carNumber) {
+	$("#carte").attr('src', document.getElementById(CarteEvent[cardNumber].url).src);
+	$("#carte").attr('alt', CarteEvent[cardNumber].texte);
+	$("#carte").show();
+}
+
+function PlayQuizz(){
+	var cardNumber = parseInt(Math.random() * (CarteQuizz.length - 1));
+	var whereGoodAnswerIs = Math.floor(Math.random() * Math.floor(3));
+	var premiereReponseFausseMise = false;
+
+	$("#question").text(CarteQuizz[cardNumber].texte);
+	$("#questionCard").alt = CarteQuizz[cardNumber].texte;
+	for(var i = 0; i < 3; i++)
+	{
+		liclass = "#rep" + i;
+		if(i == whereGoodAnswerIs)
+		{
+			$(liclass).text(CarteQuizz[cardNumber].true);
+		}
+		else if(premiereReponseFausseMise == false)
+		{
+			$(liclass).text(CarteQuizz[cardNumber].false1);
+			premiereReponseFausseMise = true;
+		}
+		else
+			$(liclass).text(CarteQuizz[cardNumber].false2);
+		$(liclass).on("click" ,function()
+		{
+			$("#QuizzDiv").hide();
+			$("#cache").hide();
+			if (this.id.slice(-1) == whereGoodAnswerIs)//Si c'est la bonne réponse
+			{
+				MovePion(plateau[pions[Jeu.i % Jeu.nb_player].id + 2], pions[Jeu.i % Jeu.nb_player]);//On avance de deux cases
+			}
+			else
+			{
+				MovePion(plateau[pions[Jeu.i % Jeu.nb_player].id - 2], pions[Jeu.i % Jeu.nb_player]);//Sinon on recule
+
+			}
+			for(var i = 0; i < 3; i++)
+			{
+				$("#rep" + i).off("click"); //Et on debind
+			}
+			setTimeout(ThrowDice, 2050);//(On attends deux secondes pour le pion)
+		});
+	}
+	$("#QuizzDiv").show();
+}
+
+function Win()
+{
+	$("#winDiv").show();
+}
+
+function rename(id) {
+	// on cache le span avec le nom et on affiche l'input
+	$("#span_j_" + id).hide();
+	$("#input_j_" + id).show();
+	// sur un focusout, on met la nouvelle valeur dans le span
+	$("#input_j_" + id).focusout(function() {
+		let new_val = $(this).val();
+		print_rename(id, new_val);
+	})
+	// pareil pour la touche entrée
+	$("#input_j_" + id).on('keypress', function(e) {
+		if (e.which == 13) {
+			let new_val = $(this).val();
+			print_rename(id, new_val);
+		}
+	})
+
+}
+
+function t(duree, span){
+    s = duree;
+    m = 0;
+	h = 0;
+    if(s < 0){
+		if(span.id != undefined){
+			$(span).remove();
+		}
+		else
+			$(span).html("");
+		return;
+	}
+	else
+	{
+		if(s > 59)
+		{
+			m = Math.floor(s / 60);
+			s = s - m*60;
+		}
+		if(m>59)
+		{
+			h = Math.floor(m/60);
+			m = m - h * 60
+		}
+		if(s<10)
+		{
+			s = "0" + s
+		}
+		if(m < 10)
+		{
+			m ="0"+ m
+		}
+		$(span).html(h + " : "+ m + " : "+ s + "<br />");
+	}
+	duree = duree - 1;
+	Jean = setTimeout(t,999, duree, span);
+}
+
+function print_rename(id, val) {
+	if (val.length > 0 && val.length < 15) {
+		$("#span_j_" + id).empty();
+		$("#span_j_" + id).text(val);
+		$("#input_j_" + id).hide();
+		$("#span_j_" + id).show();
+	} else {
+		$("#input_j_" + id).hide();
+		$("#span_j_" + id).show();
+	}
 }
