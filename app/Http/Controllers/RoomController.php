@@ -13,6 +13,7 @@ use App\Events\finishedTutoEvent;
 use App\Events\throwDiceEvent;
 use App\Events\playCardEvent;
 use App\Events\playedEventEvent;
+use App\Events\playedQuizzEvent;
 
 class RoomController extends Controller
 {
@@ -129,12 +130,24 @@ class RoomController extends Controller
     }
 
     public function playCard(Request $request) {
-        $event = new playCardEvent(['room' => $request['room'], 'card' => $request['card'], 'type' => $request["type"]]);
+        switch ($request["type"]) {
+            case 'Event':
+                $event = new playCardEvent(['room' => $request['room'], 'card' => $request['card'], 'type' => $request["type"]]);
+                break;
+            case 'Quizz':
+                $event = new playCardEvent(['room' => $request['room'], 'card' => $request['card'], 'type' => $request["type"], 'whereGoodAnswerIs' => $request["whereGoodAnswerIs"]]);
+                break;
+        }
         event($event);
     }
 
     public function playedEvent(Request $request) {
         $event = new playedEventEvent(['room' => $request['room'], 'card' => $request['card']]);
+        event($event);
+    }
+
+    public function playedQuizz(Request $request) {
+        $event = new playedQuizzEvent(['room' => $request['room'], 'card' => $request['card'], 'whereGoodAnswerIs' => $request["whereGoodAnswerIs"], 'answer_id' => $request["answer"]]);
         event($event);
     }
 }

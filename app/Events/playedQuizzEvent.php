@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class playCardEvent implements ShouldBroadcast
+class playedQuizzEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $room;
@@ -35,13 +35,10 @@ class playCardEvent implements ShouldBroadcast
     }
     public function broadCastWith()
     {
-        $toReturn = [
+        return [
             'card' => $this->room["card"],
-            'type' => $this->room["type"]
+            'whereGoodAnswerIs' => $this->room["whereGoodAnswerIs"],
+            'answer_id' => $this->room['answer_id']
         ];
-        if ($this->room["type"] == "Quizz") {
-            $toReturn['whereGoodAnswerIs'] = $this->room["whereGoodAnswerIs"];
-        }
-        return $toReturn;
     }
 }

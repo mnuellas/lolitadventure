@@ -21,12 +21,18 @@ e.channel('room.' + room)
   })
   .listen('playCardEvent', (e) => {
 	  switch(e["type"]) {
-		  case "Event" :
+		case "Event" :
 			showCardEvent(e["card"])
+			break;
+		case "Quizz":
+			showCardQuizz(e["card"], parseInt(e["whereGoodAnswerIs"]))
 	  }
   })
   .listen('playedEventEvent', (e) => {
 	playCardEvent(e["card"]);
+  })
+  .listen('playedQuizzEvent', (e) => {
+	playCardQuizz(parseInt(e['whereGoodAnswerIs']), parseInt(e['answer_id']));
   })
 
 var Jeu = {
@@ -815,7 +821,7 @@ function PlayCard(cardId)
 		// 		PlayQuizz();
 		// 		break;
 		// }
-		PlayEvent();
+		PlayQuizz();
 	}
 }
 
@@ -958,8 +964,32 @@ function showCardEvent(cardNumber) {
 function PlayQuizz(){
 	var cardNumber = parseInt(Math.random() * (CarteQuizz.length - 1));
 	var whereGoodAnswerIs = Math.floor(Math.random() * Math.floor(3));
-	var premiereReponseFausseMise = false;
+	$.post("https://lolitadventure.fr/playCard", {
+		'_token' : $('meta[name="csrf-token"]').attr("content"),
+		card : cardNumber,
+		whereGoodAnswerIs : whereGoodAnswerIs,
+		room : room,
+		type : "Quizz"
+	});
+}
 
+function playCardQuizz(whereGoodAnswerIs, answer_id) {
+	$("#QuizzDiv").hide();
+	$("#cache").hide();
+	if (answer_id == whereGoodAnswerIs)//Si c'est la bonne réponse
+	{
+		MovePion(plateau[pions[Jeu.i % Jeu.nb_player].id + 2], pions[Jeu.i % Jeu.nb_player]);//On avance de deux cases
+	}
+	else
+	{
+		MovePion(plateau[pions[Jeu.i % Jeu.nb_player].id - 2], pions[Jeu.i % Jeu.nb_player]);//Sinon on recule
+	}
+	setTimeout(nextTurn, 2050);//(On attends deux secondes pour le pion)
+}
+
+function showCardQuizz(cardNumber, whereGoodAnswerIs) {
+	var premiereReponseFausseMise = false;
+	var liclass;
 	$("#question").text(CarteQuizz[cardNumber].texte);
 	$("#questionCard").alt = CarteQuizz[cardNumber].texte;
 	for(var i = 0; i < 3; i++)
@@ -976,25 +1006,21 @@ function PlayQuizz(){
 		}
 		else
 			$(liclass).text(CarteQuizz[cardNumber].false2);
-		$(liclass).on("click" ,function()
-		{
-			$("#QuizzDiv").hide();
-			$("#cache").hide();
-			if (this.id.slice(-1) == whereGoodAnswerIs)//Si c'est la bonne réponse
+		if (Jeu.i % Jeu.nb_player == player_number) {
+			$(liclass).on("click" ,function()
 			{
-				MovePion(plateau[pions[Jeu.i % Jeu.nb_player].id + 2], pions[Jeu.i % Jeu.nb_player]);//On avance de deux cases
-			}
-			else
-			{
-				MovePion(plateau[pions[Jeu.i % Jeu.nb_player].id - 2], pions[Jeu.i % Jeu.nb_player]);//Sinon on recule
-
-			}
-			for(var i = 0; i < 3; i++)
-			{
-				$("#rep" + i).off("click"); //Et on debind
-			}
-			setTimeout(ThrowDice, 2050);//(On attends deux secondes pour le pion)
-		});
+				for(var i = 0; i < 3; i++)
+				{
+					$("#rep" + i).off("click"); //Et on debind
+				}
+				$.post("https://lolitadventure.fr/playedQuizz", {
+					'_token' : $('meta[name="csrf-token"]').attr("content"),
+					answer : this.id.slice(-1),
+					whereGoodAnswerIs : whereGoodAnswerIs,
+					room : room,
+				});
+			});
+		}
 	}
 	$("#QuizzDiv").show();
 }
