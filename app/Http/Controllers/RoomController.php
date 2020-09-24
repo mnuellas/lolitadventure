@@ -10,6 +10,7 @@ use App\Events\RoomJoinedEvent;
 use App\Events\someoneJoined;
 use App\Events\EverybodyHereEvent;
 use App\Events\finishedTutoEvent;
+use App\Events\throwDiceEvent;
 
 class RoomController extends Controller
 {
@@ -118,5 +119,10 @@ class RoomController extends Controller
         $event = new finishedTutoEvent(['room' => $request['room']]);
         event($event);
         return 'ok';
+    }
+
+    public function throwDice(Request $request) {
+        $event = new throwDiceEvent(['room' => $request['room'], 'de' => $request['de'], 'player_number' => $request["player_number"]]);
+        event($event);
     }
 }

@@ -63,9 +63,10 @@ Route::post('/okredirectUs', function(Request $request) {
   $request->session()->put('room',  $request['room']);
   $request->session()->put('number_personn', $request['number_personn']);
   $request->session()->put('player_nbr', $request["player_number"]);
-  return 'ok';
+  return response('ok');
 });
 Route::post('/finishedTuto', 'RoomController@finishedTuto');
+Route::post('/throwDice', 'RoomController@throwDice');
 
 Route::get('/playRoom', 'RoomController@play');
 

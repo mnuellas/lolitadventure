@@ -1,12 +1,27 @@
+import { parseJSON } from 'jquery';
 import Echo from 'laravel-echo'
 
 let e = new Echo({
     broadcaster:'socket.io',
     host:window.location.hostname
 });
+let nbr_person_who_finished_tuto = 0; 
+e.channel('room.' + room)
+  .listen('finishedTutoEvent', (e) => {
+	nbr_person_who_finished_tuto++;
+	if (nbr_person_who_finished_tuto == number_players) {
+		showDice();
+		if (player_number == 0) {
+			ThrowDice();
+		}
+	}
+  })
+  .listen('throwDiceEvent', (e) => {
+	animateDice(e["de"]);
+  })
 
 var Jeu = {
-	nb_player: 0,
+	nb_player: number_players,
 	i: -1,
 	carteQuizz: 0,
 	nb_carte : 0,
@@ -402,7 +417,8 @@ $(document).ajaxSuccess(function(){
       CarteQuizz = CartesArray[0];
       CarteEvent = CartesArray[1];
       CarteAction = CartesArray[2];
-      $("#loader").remove();//On enlève la barre de chargement
+	  $("#loader").remove();//On enlève la barre de chargement
+	  succeded++;
       Init();
     }
 });
@@ -573,10 +589,11 @@ function CreatePlateau()
 }
 
 function Init() {
+	console.log('init')
 	$("#cache").show();
 	$("#carte").hide();
 	CreatePlateau();
-	Tutorial(0);
+  Tutorial(0);
 }
 
 //magie noire pour mettre le fond, please n'y touche pas
@@ -625,16 +642,24 @@ function CreatePion(pionNumber) {
 	$('.input_name').css('display', 'none');
 }
 
+function skipTuto() {
+  $("#welcomeDiv").hide();
+	pions.sort(function(a, b){return a.pionNumber - b.pionNumber})
+	finishedTuto();
+}
+
 function Tutorial(i)
 {
 	if (i == 0)
-		$("#welcomeDiv").show();
+    $("#welcomeDiv").show();
 	if (i == Object.keys(Tuto).length) {
 		$("#welcomeDiv").hide();
 		pions.sort(function(a, b){return a.pionNumber - b.pionNumber})
-		ThrowDice();
+		finishedTuto();
 	}
 	$("#welcomeDiv").html(Tuto[i]);
+	if (i == 1)
+    	document.getElementById('skipTuto').onclick = function(){skipTuto()};
 	$("#clickMe").on("click", function()
 	{
 		if (i == 1)
@@ -655,7 +680,52 @@ function Tutorial(i)
 	});
 }
 
-e.channel('room.' + room)
-  .listen('RoomJoinedEvent', function (e) {
-    console.log(e)
-  })
+function finishedTuto() {
+	$.post("https://lolitadventure.fr/finishedTuto", {
+        '_token' : $('meta[name="csrf-token"]').attr("content"),
+        room : room,
+    });
+}
+
+function ThrowDice()
+{
+	$("#de").on("click", function() {
+		$("#de").off("click");
+		var deName = Math.floor(Math.random() * (7 - 1) + 1);
+		$.post("https://lolitadventure.fr/throwDice", {
+			'_token' : $('meta[name="csrf-token"]').attr("content"),
+			de : deName,
+			room : room,
+			player_number : player_number
+		});
+	});
+}
+
+function showDice() {
+	Jeu.i++;
+	//var spanny = $("#tour").text();
+	// récup du nom de la joueuse ( a tester en détail)
+	let j_id = $("#input_j_" + ((Jeu.i % Jeu.nb_player) + 1)).val();
+	$("#tour").empty();
+	$("#tour").text(" " + j_id);
+
+	//	$("#tour").text(spanny.replace(Jeu.i % Jeu.nb_player, (Jeu.i % Jeu.nb_player) + 1));
+	if(Jeu.i % Jeu.nb_player == 0)
+	$("#tour").text(" " + $("#input_j_1").val());
+	//	$("#tour").text(spanny.replace(Jeu.nb_player, "1"));
+	$("#cache").show();
+	$("#de").show();
+}
+
+function animateDice(deName) {
+	$("#de").attr("src", "De/de" + deName + '.png');
+	$("#de").transition({rotate: '180deg', duration: 500});
+	setTimeout(function(){
+		$("#de").transition({rotate: '0deg', duration: 500});
+		$("#de").fadeOut(1000);
+		setTimeout(function(){
+			Play(deName);
+		}, 1500);
+		$("#cache").hide();
+	}, 1000);
+}
