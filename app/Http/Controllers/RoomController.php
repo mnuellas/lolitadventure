@@ -17,6 +17,7 @@ use App\Events\playedQuizzEvent;
 use App\Events\playDefiEvent;
 use App\Events\playingDefiEvent;
 use App\Events\spiedEvent;
+use App\Events\playedActionEvent;
 
 class RoomController extends Controller
 {
@@ -168,6 +169,11 @@ class RoomController extends Controller
 
     public function playedQuizz(Request $request) {
         $event = new playedQuizzEvent(['room' => $request['room'], 'card' => $request['card'], 'whereGoodAnswerIs' => $request["whereGoodAnswerIs"], 'answer_id' => $request["answer"]]);
+        event($event);
+    }
+
+    public function playedAction(Request $request) {
+        $event = new playedActionEvent(['room' => $request['room'], 'card' => $request['card']]);
         event($event);
     }
 }

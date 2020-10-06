@@ -39,7 +39,7 @@ e.channel('room.' + room)
 		playDefi(e["card"]);
 	}
   })
-  .listen('playingDefi', (e) => {
+  .listen('playingDefiEvent', (e) => {
 	$("#ActionDiv").html("<p>" + hitSpacebar + "<br />" + remaingSpacebarHits1 + e["value"] + remaingSpacebarHits2);
   })
   .listen('spiedEvent', (e) => {
