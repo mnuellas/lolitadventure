@@ -14,6 +14,9 @@ use App\Events\throwDiceEvent;
 use App\Events\playCardEvent;
 use App\Events\playedEventEvent;
 use App\Events\playedQuizzEvent;
+use App\Events\playDefiEvent;
+use App\Events\playingDefiEvent;
+use App\Events\spiedEvent;
 
 class RoomController extends Controller
 {
@@ -28,7 +31,7 @@ class RoomController extends Controller
         } else {
           return app()->getLocale();
         }
-      }
+    }
 
     public function createRoomView() {
         //TODO faire ça en un seul return quand t'as le temps en jouant avec set = basic de base
@@ -129,6 +132,11 @@ class RoomController extends Controller
         event($event);
     }
 
+    public function spied(Request $request) {
+        $event = new spiedEvent(['room' => $request['room'], 'span' => $request['span']]);
+        event($event);
+    }
+
     public function playCard(Request $request) {
         switch ($request["type"]) {
             case 'Event':
@@ -137,7 +145,19 @@ class RoomController extends Controller
             case 'Quizz':
                 $event = new playCardEvent(['room' => $request['room'], 'card' => $request['card'], 'type' => $request["type"], 'whereGoodAnswerIs' => $request["whereGoodAnswerIs"]]);
                 break;
+            case "Action":
+                $event = new playCardEvent(['room' => $request['room'], 'card' => $request['card'], 'type' => $request["type"]]);
         }
+        event($event);
+    }
+
+    public function playingDefi(Request $request) {
+        $event = new playingDefiEvent(['room' => $request['room'], 'card' => $request['card'], 'value', $request['value']]);
+        event($event);
+    }
+
+    public function playDefi(Request $request) {
+        $event = new playDefiEvent(['room' => $request['room'], 'card' => $request['card'], 'whoPress', $request['whoPress']]);
         event($event);
     }
 

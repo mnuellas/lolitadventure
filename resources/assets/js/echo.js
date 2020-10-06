@@ -26,13 +26,36 @@ e.channel('room.' + room)
 			break;
 		case "Quizz":
 			showCardQuizz(e["card"], parseInt(e["whereGoodAnswerIs"]))
+			break;
+		case "Action":
+			showCardAction(e["card"])
 	  }
+  })
+  .listen('playDefiEvent', (e) => {
+	$("#carte").hide();
+	$("#ActionDiv").show();//On  affiche l'ecran
+	$("#ActionDiv").html(hitSpacebar + "<br />" + remaingSpacebarHits1 + CarteAction[e["card"]].value + remaingSpacebarHits2);
+	if (parseInt(e["whoPress"]) == player_number) {
+		playDefi(e["card"]);
+	}
+  })
+  .listen('playingDefi', (e) => {
+	$("#ActionDiv").html("<p>" + hitSpacebar + "<br />" + remaingSpacebarHits1 + e["value"] + remaingSpacebarHits2);
+  })
+  .listen('spiedEvent', (e) => {
+	  spied(e["span"]);
   })
   .listen('playedEventEvent', (e) => {
 	playCardEvent(e["card"]);
   })
   .listen('playedQuizzEvent', (e) => {
 	playCardQuizz(parseInt(e['whereGoodAnswerIs']), parseInt(e['answer_id']));
+  })
+  .listen('playedDefiEvent', (e) => {
+	  playedDefi();
+  })
+  .listen('playedActionEvent', (e) => {
+	  playedAction(e["card"]);
   })
 
 var Jeu = {
@@ -821,51 +844,79 @@ function PlayCard(cardId)
 		// 		PlayQuizz();
 		// 		break;
 		// }
-		PlayQuizz();
+		PlayAction();
 	}
 }
 
 function PlayAction()
 {
-	var cardNumber = parseInt(Math.random() * (CarteAction.length - 1));//On prends une carte random dans le tableau
+	var cardNumber = Math.floor(Math.random() * (CarteAction.length - 1));//On prends une carte random dans le tableau
+	$.post("https://lolitadventure.fr/playCard", {
+		'_token' : $('meta[name="csrf-token"]').attr("content"),
+		card : cardNumber,
+		room : room,
+		type : "Action"
+	});
+	console.log(CarteAction[cardNumber].type);
+	switch(CarteAction[cardNumber].type)//Selon le type de la carte on a différentes réactions
+	{
+		case "defi":
+			$("#carte").on("click", function() {
+				$("#carte").off("click");//On désactive le fait que l'on puisse cliquer (Je sais c'est bizarre mais ça permet de pas avoir 3000 fct bindées)
+				var rand = 0;
+				do {
+					rand = Math.floor(Math.random() * (Jeu.nb_player - 1));
+				} while ((rand == player_number && number_players > 1) || number_players == 1); //on choisit qql pour appuyer sur action
+				$.post("https://lolitadventure.fr/playDefi", {
+					'_token' : $('meta[name="csrf-token"]').attr("content"),
+					card : cardNumber,
+					room : room,
+					whoPress : rand
+				});
+			});
+			break;
+		case "tour":
+		case "minuteur":
+			$("#carte").on("click", function() {
+				$("#carte").off("click");//On désactive le fait que l'on puisse cliquer (Je sais c'est bizarre mais ça permet de pas avoir 3000 fct bindées)
+				$.post("https://lolitadventure.fr/playedAction", {
+					'_token' : $('meta[name="csrf-token"]').attr("content"),
+					card : cardNumber,
+					room : room,
+				});
+			})
+			break;
+	}
+}
+
+function showCardAction(cardNumber) {
 	$("#carte").attr('src', document.getElementById(CarteAction[cardNumber].url).src);//On transforme notre img en cette carte
 	$("#carte").attr('alt', CarteAction[cardNumber].texte);//(et le alt aussi pour les malentendants)
 	$("#carte").show();//Puis on la montre
 	$("#QuizzDiv").hide();//Bug bizarre corrigé
-	switch(CarteAction[cardNumber].type)//Selon le type de la carte on a différentes réactions
-	{
-		case "defi" ://Le défi, on doit faire une certaine action un certains nombre de fois, ainsi, on affichera un écran pour montrer combien de fois il reste et les joueuses cliqueront/barspacerons à chauqe fois
-			$("#carte").on("click", function(){//Au click
-					$("#carte").off("click");//On désactive le fait que l'on puisse cliquer (Je sais c'est bizarre mais ça permet de pas avoir 3000 fct bindées)
-					$("#carte").hide();//on cache la carte et on montre l'action
-					$("#ActionDiv").show();//On  affiche l'ecran
-					$("#ActionDiv").html(hitSpacebar + "<br />" + remaingSpacebarHits1 + CarteAction[cardNumber].value + remaingSpacebarHits2);
-					CarteAction[cardNumber].nombreinitial = CarteAction[cardNumber].value;
-					$("#ActionDiv").on("click", function(){
-						LessAction(CarteAction[cardNumber]);//A chaque fois qu'on click, on doit faire l'action en moins
-					});
-					$(document).on("keyup", function(event){ //sinon on peut spacebar
-						if(event.which == 32)
-							LessAction(CarteAction[cardNumber]);//Sachant que l'on off le spacebar dans LessAction
-					});
-			});
-		break;
-		case "tour" :
-		case "minuteur" ://minuteur et tour fonctionne pareil, on va afficher sur le profil de la joueuse combien de temps / tours il lui reste à faire son action
-			$("#carte").on("click", function()
-			{
-				$("#carte").off("click");
-				$("#carte").hide();
-				$("#cache").hide();
-				ThrowDice();
-				let jeu =  Jeu.i % Jeu.nb_player
-				if (jeu == 0)
-					jeu = Jeu.nb_player;
-				ActionMinuteur(cardNumber, "#span" + jeu);//On lié une ation minuteur au profil (donc la span) de la joueuse
-			});
-		break;
-	}
 	$(".carte").show();
+}
+
+function playDefi(cardNumber) {
+	//change #ActionDiv to be pink or smthing
+	CarteAction[cardNumber].nombreinitial = CarteAction[cardNumber].value;
+	$("#ActionDiv").on("click", function(){
+		LessAction(CarteAction[cardNumber]);//A chaque fois qu'on click, on doit faire l'action en moins
+	});
+	$(document).on("keyup", function(event){ //sinon on peut spacebar
+		var key = event.key || event.keyCode;
+		if(key === ' ' || key === 'Space' || key === 32 || event.code == "Space")
+			LessAction(CarteAction[cardNumber]);//Sachant que l'on off le spacebar dans LessAction
+	});
+}
+
+function playedAction(cardNumber) {
+	$("#carte").hide();
+	nextTurn();
+	let jeu =  Jeu.i % Jeu.nb_player
+	if (jeu == 0)
+		jeu = Jeu.nb_player;
+	ActionMinuteur(cardNumber, "#span" + jeu);//On lié une ation minuteur au profil (donc la span) de la joueuse
 }
 
 function ActionMinuteur(cardNumber, span)
@@ -895,14 +946,20 @@ function ActionMinuteur(cardNumber, span)
 			Jeu.carteTour.push([CarteAction[cardNumber].value, span]);
 		}
 
-		if(CarteAction[cardNumber].espionnage != 0)
+		if (CarteAction[cardNumber].espionnage != 0)
 		{//on rajoute la fonction espionnage
 			Jeu.espionnee.span = (Jeu.i % Jeu.nb_player) - 1;
 			if (Jeu.espionnee.span == -1)
 				Jeu.espionnee.span = 0;
-			$(span).click(function(){//Si l'espionnage s'effectue on recule de deux cases
-				MovePion(plateau[pions[Jeu.espionnee.span].id - 2], pions[Jeu.espionnee.span]);
-			});
+			if (Jeu.i % Jeu.nb_player != player_number) {
+				$(span).on("click", function(){//Si l'espionnage s'effectue on recule de deux cases
+					$.post("https://lolitadventure.fr/spied", {
+						'_token' : $('meta[name="csrf-token"]').attr("content"),
+						span : Jeu.espionnee.span,
+						room : room,
+					});
+				});
+			}
 		}
 	} else {//sinon on va creer une nouvelle span
 		span2 = document.createElement("span");
@@ -912,21 +969,36 @@ function ActionMinuteur(cardNumber, span)
 	}
 }
 
+function spied(span) {
+	MovePion(plateau[pions[span].id - 2], pions[span]);
+}
+
 function LessAction(card){
 	if(card.value > 1)//Si on dois encore faire l'action
 	{
 		card.value--;//On enlève et on rafraichit
-		$("#ActionDiv").html("<p>" + hitSpacebar + "<br />" + remaingSpacebarHits1 + card.value + remaingSpacebarHits2);
+		$.post("https://lolitadventure.fr/playingDefi", {
+			'_token' : $('meta[name="csrf-token"]').attr("content"),
+			value : card.value,
+			room : room,
+		});
 	}
 	else
 	{
-		$("#ActionDiv").hide(); //Sinon c'est terminé et on cache l'écran
-		$("#cache").hide();
 		card.value = card.nombreinitial;
 		$("#ActionDiv").off("click");//Et on debind tous les espions
 		$(document).off("keyup");
-		setTimeout(ThrowDice, 250);
+		$.post("https://lolitadventure.fr/playedDefi", {
+			'_token' : $('meta[name="csrf-token"]').attr("content"),
+			room : room,
+		});
 	}
+}
+
+function playedDefi() {
+	$("#ActionDiv").hide(); //Sinon c'est terminé et on cache l'écran
+	$("#cache").hide();
+	setTimeout(nextTurn, 250);
 }
 
 function PlayEvent(){//ici on montre juste la carte, attends que le joueur appuie dessus et applique l'effet
