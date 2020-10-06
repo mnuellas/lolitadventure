@@ -57,7 +57,9 @@ e.channel('room.' + room)
   .listen('playedActionEvent', (e) => {
 	  playedAction(e["card"]);
   })
-
+  .listen('printRenameEvent', (e) => {
+	  print_rename(e["id"], e["value"]);
+  })
 var Jeu = {
 	nb_player: number_players,
 	i: -1,
@@ -832,19 +834,18 @@ function PlayCard(cardId)
 {
 	$("#cache").show();
 	if (Jeu.i % Jeu.nb_player == player_number) {
-		// switch(Cases[cardId].carte)
-		// {
-		// 	case "Action" :
-		// 		PlayAction();
-		// 		break;
-		// 	case "Event" :
-		// 		PlayEvent();
-		// 		break;
-		// 	case "Quizz" :
-		// 		PlayQuizz();
-		// 		break;
-		// }
-		PlayAction();
+		switch(Cases[cardId].carte)
+		{
+			case "Action" :
+				PlayAction();
+				break;
+			case "Event" :
+				PlayEvent();
+				break;
+			case "Quizz" :
+				PlayQuizz();
+				break;
+		}
 	}
 }
 
@@ -926,7 +927,7 @@ function ActionMinuteur(cardNumber, span)
 	{
 		//on lui rajoute un hover, une merch sympa pour rappeler aux joueuses quels
 		//défis elles ont.
-		$(span).hover(function(){
+		$(span).on("hover", function(){
 			var defiImg = document.createElement("img");
 			defiImg.id = "defiImg";
 			defiImg.style.zIndex = 100;
@@ -1109,13 +1110,23 @@ function rename(id) {
 	// sur un focusout, on met la nouvelle valeur dans le span
 	$("#input_j_" + id).focusout(function() {
 		let new_val = $(this).val();
-		print_rename(id, new_val);
+		$.post("https://lolitadventure.fr/print_rename", {
+			'_token' : $('meta[name="csrf-token"]').attr("content"),
+			answer : this.id.slice(-1),
+			id : id,
+			value : new_val,
+		});
 	})
 	// pareil pour la touche entrée
 	$("#input_j_" + id).on('keypress', function(e) {
 		if (e.which == 13) {
 			let new_val = $(this).val();
-			print_rename(id, new_val);
+			$.post("https://lolitadventure.fr/print_rename", {
+				'_token' : $('meta[name="csrf-token"]').attr("content"),
+				answer : this.id.slice(-1),
+				id : id,
+				value : new_val,
+			});
 		}
 	})
 

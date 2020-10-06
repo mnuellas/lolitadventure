@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Events\RoomJoinedEvent;
 use App\Events\someoneJoined;
 use App\Events\EverybodyHereEvent;
+use App\Events\printRenameEvent;
 use App\Events\finishedTutoEvent;
 use App\Events\throwDiceEvent;
 use App\Events\playCardEvent;
@@ -120,6 +121,11 @@ class RoomController extends Controller
         } else {
             return redirect('error');
         }
+    }
+
+    public function print_rename(Request $request) {
+        $event = new printRenameEvent(['room' => $request['room'], 'id' => $request['id'], 'value' => $request['value']]);
+        event($event);
     }
 
     public function finishedTuto(Request $request) {
