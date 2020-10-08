@@ -99,6 +99,7 @@ class RoomController extends Controller
     }
     public function everybodyhere(Request $request) {
         $room = DB::table('rooms')->where('url', '=', $request['room'])->get();
+        DB::table('rooms')->where('url', '=', $request['room'])->delete();
         $event = new EverybodyHereEvent(['room' => $request['room'], 'number_personn' => $room[0]->number_player]);
         event($event);
         return 'ok';
