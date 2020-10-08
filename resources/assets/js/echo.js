@@ -1103,35 +1103,6 @@ function Win()
 	$("#winDiv").show();
 }
 
-function rename(id) {
-	// on cache le span avec le nom et on affiche l'input
-	$("#span_j_" + id).hide();
-	$("#input_j_" + id).show();
-	// sur un focusout, on met la nouvelle valeur dans le span
-	$("#input_j_" + id).focusout(function() {
-		let new_val = $(this).val();
-		$.post("https://lolitadventure.fr/print_rename", {
-			'_token' : $('meta[name="csrf-token"]').attr("content"),
-			answer : this.id.slice(-1),
-			id : id,
-			value : new_val,
-		});
-	})
-	// pareil pour la touche entrée
-	$("#input_j_" + id).on('keypress', function(e) {
-		if (e.which == 13) {
-			let new_val = $(this).val();
-			$.post("https://lolitadventure.fr/print_rename", {
-				'_token' : $('meta[name="csrf-token"]').attr("content"),
-				answer : this.id.slice(-1),
-				id : id,
-				value : new_val,
-			});
-		}
-	})
-
-}
-
 function t(duree, span){
     s = duree;
     m = 0;
