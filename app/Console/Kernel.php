@@ -26,6 +26,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('email:send')->weekly();
+        $schedule->exec('exec /usr/local/letsencrypt/letsencrypt-auto renew')->monthly()->emailOutputTo('lolitadventure.fr@gmail.com');
+        $schedule->exec('exec /usr/local/letsencrypt/letsencrypt-auto renew')->monthlyOn(7)->emailOutputTo('lolitadventure.fr@gmail.com');
     }
 
     /**
