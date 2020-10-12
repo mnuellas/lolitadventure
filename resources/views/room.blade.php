@@ -84,33 +84,52 @@
 	var number_players = "{{ $players }}";
 	var player_number = "{{ $player_nbr }}" - 1;
 	function rename(id) {
-	// on cache le span avec le nom et on affiche l'input
-	$("#span_j_" + id).hide();
-	$("#input_j_" + id).show();
-	// sur un focusout, on met la nouvelle valeur dans le span
-	$("#input_j_" + id).focusout(function() {
-		let new_val = $(this).val();
-		$.post("https://lolitadventure.fr/print_rename", {
-			'_token' : $('meta[name="csrf-token"]').attr("content"),
-			answer : this.id.slice(-1),
-			id : id,
-			value : new_val,
-		});
-	})
-	// pareil pour la touche entrée
-	$("#input_j_" + id).on('keypress', function(e) {
-		if (e.which == 13) {
+		// on cache le span avec le nom et on affiche l'input
+		$("#span_j_" + id).hide();
+		$("#input_j_" + id).show();
+		// sur un focusout, on met la nouvelle valeur dans le span
+		$("#input_j_" + id).focusout(function() {
 			let new_val = $(this).val();
 			$.post("https://lolitadventure.fr/print_rename", {
-				'_token' : $('meta[name="csrf-token"]').attr("content"),
-				answer : this.id.slice(-1),
+				'_token' : "{{ csrf_token() }}",
+				room : room,
 				id : id,
 				value : new_val,
 			});
+		})
+		// pareil pour la touche entrée
+		$("#input_j_" + id).on('keypress', function(e) {
+			if (e.which == 13) {
+				let new_val = $(this).val();
+				$.post("https://lolitadventure.fr/print_rename", {
+					'_token' : "{{ csrf_token() }}",
+					room : room,
+					id : id,
+					value : new_val,
+				});
+			}
+		})
+	}
+	
+	function Reset()
+	{
+		$("#winDiv").hide();
+		for (var i = 0; i < pions.length; i++)
+		{
+			pions[i].id = 0;
+			pions[i].animate('top', plateau[0].top, { onChange: canvas.renderAll.bind(canvas) });
+			pions[i].animate('left', plateau[0].left, { onChange: canvas.renderAll.bind(canvas) });
 		}
-	})
+		clearTimeout();
+		$("#ulProfil > li").remove();
+		$("span").html("");
+		ThrowDice();
+	}
 
-}
+	function HardReset()
+	{
+		location.reload();
+	}
 </script>
 		</body>
 

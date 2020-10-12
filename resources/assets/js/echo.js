@@ -863,11 +863,14 @@ function PlayAction()
 	{
 		case "defi":
 			$("#carte").on("click", function() {
+				console.log(player_number);
 				$("#carte").off("click");//On désactive le fait que l'on puisse cliquer (Je sais c'est bizarre mais ça permet de pas avoir 3000 fct bindées)
 				var rand = 0;
-				do {
-					rand = Math.floor(Math.random() * (Jeu.nb_player - 1));
-				} while ((rand == player_number && number_players > 1) || number_players == 1); //on choisit qql pour appuyer sur action
+				if (Jeu.nb_player != 1) {
+					do {
+						rand = Math.floor(Math.random() * (Jeu.nb_player - 1));
+					} while (rand == player_number); //on choisit qql pour appuyer sur action
+				}
 				$.post("https://lolitadventure.fr/playDefi", {
 					'_token' : $('meta[name="csrf-token"]').attr("content"),
 					card : cardNumber,
@@ -1104,9 +1107,9 @@ function Win()
 }
 
 function t(duree, span){
-    s = duree;
-    m = 0;
-	h = 0;
+    let s = duree;
+    let m = 0;
+	let h = 0;
     if(s < 0){
 		if(span.id != undefined){
 			$(span).remove();
@@ -1138,7 +1141,7 @@ function t(duree, span){
 		$(span).html(h + " : "+ m + " : "+ s + "<br />");
 	}
 	duree = duree - 1;
-	Jean = setTimeout(t,999, duree, span);
+	let Jean = setTimeout(t,999, duree, span);
 }
 
 function print_rename(id, val) {

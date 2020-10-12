@@ -40,7 +40,8 @@ e.channel('room.' + room)
             '_token' : token,
             room : room,
             number_personn : number_personn,
-            player_number : player_number
+            player_number : player_number,
+            room_info : e["room_info"]
           }, function(data) {
               window.location.replace("https://lolitadventure.fr/playRoom");
           });

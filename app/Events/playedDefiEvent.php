@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class EverybodyHereEvent implements ShouldBroadcast
+class playedDefiEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $room;
@@ -32,13 +32,8 @@ class EverybodyHereEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
+        //dd($this->room['room']);
         return new Channel('room.' . $this->room['room']);
-    }
-    public function broadcastWith()
-    {
-        return [
-            "number_personn" => $this->room['number_personn'],
-            "room_info" => $this->room["room_info"]
-        ];
+        //return new PrivateChannel('channel-name');
     }
 }

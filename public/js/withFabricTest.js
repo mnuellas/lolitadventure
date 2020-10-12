@@ -592,7 +592,7 @@ function CreatePion(pionNumber) {
 		canvas.add(pion);
 	});
 	//creation profil le truc sur le coté
-	profil = document.createElement("li");
+	var profil = document.createElement("li");
 
 /************************************************************************************************ */
 /************************************************************************************************ */
@@ -732,7 +732,7 @@ function Reset()
 	clearTimeout();
 	$("#ulProfil > li").remove();
 	$("span").html("");
-	Init();
+	ThrowDice();
 }
 
 function HardReset()
