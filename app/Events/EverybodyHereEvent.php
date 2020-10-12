@@ -37,7 +37,8 @@ class EverybodyHereEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            "number_personn" => $this->room['number_personn']
+            "number_personn" => $this->room['number_personn'],
+            "room_info" => $this->room["room_info"]
         ];
     }
 }

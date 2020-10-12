@@ -35,7 +35,7 @@ class RoomController extends Controller
         }
     }
 
-    public function createRoomView() {
+    public function createRoomView($error = 0) {
         //TODO faire ça en un seul return quand t'as le temps en jouant avec set = basic de base
         $sets = ['basic'];
         $privilege = ['basic'];
@@ -57,7 +57,8 @@ class RoomController extends Controller
             'sets' => $sets,
             'privileges' => $privilege,
             'defaultSet' => $defaultSet,
-            'playing' => $playing
+            'playing' => $playing,
+            'error' => $error
         ]);
     }
 
@@ -74,7 +75,7 @@ class RoomController extends Controller
             );
             return view('waitRoom', ['url' => $request['room_url'], 'number_player' => 1]);
         } else {
-            return view('createRoom', ['error' => '1']);
+            return $this->createRoomView(1);
         }
     }
 
@@ -100,18 +101,18 @@ class RoomController extends Controller
     public function everybodyhere(Request $request) {
         $room = DB::table('rooms')->where('url', '=', $request['room'])->get();
         DB::table('rooms')->where('url', '=', $request['room'])->delete();
-        $event = new EverybodyHereEvent(['room' => $request['room'], 'number_personn' => $room[0]->number_player]);
+        $event = new EverybodyHereEvent(['room' => $request['room'], 'number_personn' => $room[0]->number_player, 'room_info' => $room[0]]);
         event($event);
         return 'ok';
     }
     public function play(Request $request) {
-        if ($request->session()->has('room') && $request->session()->has('number_personn')) {
+        if ($request->session()->has('room') && $request->session()->has('number_personn') && $request->session()->has('room_info')) {
             //$request->session()->forget(['room', 'number_personn']);
             $lang = RoomController::getLang();//app()->getLocale();
             app()->setLocale($lang);
-            $room = DB::table('rooms')->where('url', '=', $request->session()->get('room'))->get();
-            $plateau = $room[0]->plateau;
-            $collection = explode(",", $room[0]->collection);
+            //$room = DB::table('rooms')->where('url', '=', $request->session()->get('room'))->get();
+            $plateau =  $request->session()->get('room_info')['plateau'];
+            $collection = explode(",", $request->session()->get('room_info')['collection']);
             $cartesEvent = DB::table('carteevent')
                 ->whereIn('collection', $collection)
                 ->get();
