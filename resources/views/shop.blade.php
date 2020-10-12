@@ -9,37 +9,38 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Lolitadventure') }}</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <link href="{{ asset('css/shop.css') }}" rel="stylesheet">
 </head>
 <body>
-  <div id="cache">
+  <!-- <div id="cache">
     <p class="hero-textCache">{{ __('shop.underConstruction') }}<br>
     OK <a href="{{ url('/') }}">{{ __('shop.goHome') }}</a><br />
     {{ __('shop.goFacebook1') }} <a href="">Facebook</a> {{ __('shop.goFacebook2') }}</p>
-  </div>
+  </div> -->
   <header>
     <div class="topnav">
       <a href="{{ url('/') }}" style="font-size:25px">Lolitadventure</a>
       <a href="{{ route('profil') }}">Compte</a>
-      <a href="#panier">Panier</a>
+      <a href="#panier" class="notification"><i class="fas fa-shopping-cart"></i><span class="badge">1</span></a>
   </div>
   </header>
 
   <ul id="shop_ul">
     <li>
-      <h4>{{ __('main.news') }}</h4>
+      <!-- <h4>{{ __('main.news') }}</h4> -->
       <!-- Slideshow container -->
       <div class="slideshow-container">
         <!-- Full-width images with number and caption text -->
         <div class="mySlides fade">
           <div class="numbertext">1 / 3</div>
-          <img src="https://dummyimage.com/16:9x1080" style="width:100%">
+          <img src="/storage/plateauHP.png" style="width:100%; max-height:100%">
           <div class="text">Caption Text</div>
         </div>
 
         <div class="mySlides fade">
           <div class="numbertext">2 / 3</div>
-          <img src="https://dummyimage.com/16:9x1080" style="width:100%">
+          <img src="/storage/plateauSP.png" style="width:100%; max-height:100%">
           <div class="text">Caption Two</div>
         </div>
 
@@ -61,7 +62,7 @@
       <span class="dot" onclick="currentSlide(2)"></span>
       </div>
     </li>
-    <li>
+    <!-- <li>
       <div class="hero-image">
         <div class="hero-text">
           <h1>{{ __('shop.buyBoard') }}</h1>
@@ -78,7 +79,7 @@
           <button class="hero-button">{{ __('shop.buy') }}</button>
         </div>
       </div>
-    </li>
+    </li> -->
     <li>
       <h4>Tous les articles</h4>
       <div class="row">
@@ -139,12 +140,11 @@
       </div>
     </li>
   </ul>
-  <div class="footer">
-    <a href="">FaceBook</a><a href="">Instagram</a><a href="#contact">Contact</a>
+  <footer class="footer">
+    <a href="https://www.facebook.com/lolitadventure">FaceBook</a><a href="https://www.instagram.com/lolitadventure/">Instagram</a><a href="#contact">Contact</a>
     <p id="right_footer">Lolitadventure all right reserved&#169;</p>
-  </div>
+  </footer>
 </body>
-<footer>
   <script>
     var slideIndex = 1;
     showSlides(slideIndex);
@@ -179,5 +179,4 @@
       Jean = setTimeout(showSlides, 5000, slideIndex++);
     }
   </script>
-</footer>
 </html>

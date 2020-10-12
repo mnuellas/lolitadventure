@@ -249,6 +249,7 @@ h4{
 /* Some left and right padding inside the container */
 .container {
   padding: 0 16px;
+  text-align: center;
 }
 
 /* Clear floats */
@@ -273,6 +274,7 @@ h4{
   text-align: center;
   cursor: pointer;
   width: 80%;
+  margin-bottom: 3px;
 }
 
 .buttonB {
@@ -336,7 +338,7 @@ header {
 }
 
 .footer {
-  height : 7vh;
+  /* height : 7vh; */
   width: 100%;
   position: relative;
   bottom: 0;
@@ -419,4 +421,26 @@ header {
 
 .footer_lexicon a {
   margin: 10px;
+}
+
+.notification {
+  text-decoration: none;
+  padding: 15px 26px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.notification:hover {
+  color: white;
+}
+
+.notification .badge {
+  position: absolute;
+  top: 1px;
+  right: -2.5px;
+  padding: 2.5px 7px;
+  border-radius: 50%;
+  background: red;
+  color: white;
 }
