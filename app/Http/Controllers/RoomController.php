@@ -129,6 +129,7 @@ class RoomController extends Controller
     public function print_rename(Request $request) {
         $event = new printRenameEvent(['room' => $request['room'], 'id' => $request['id'], 'value' => $request['value']]);
         event($event);
+        return 'lol';
     }
 
     public function finishedTuto(Request $request) {

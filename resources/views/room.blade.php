@@ -91,8 +91,8 @@
 		$("#input_j_" + id).focusout(function() {
 			let new_val = $(this).val();
 			$.post("https://lolitadventure.fr/print_rename", {
-				'_token' : $('meta[name="csrf-token"]').attr("content"),
-				answer : this.id.slice(-1),
+				'_token' : "{{ csrf_token() }}",
+				room : room,
 				id : id,
 				value : new_val,
 			});
@@ -102,8 +102,8 @@
 			if (e.which == 13) {
 				let new_val = $(this).val();
 				$.post("https://lolitadventure.fr/print_rename", {
-					'_token' : $('meta[name="csrf-token"]').attr("content"),
-					answer : this.id.slice(-1),
+					'_token' : "{{ csrf_token() }}",
+					room : room,
 					id : id,
 					value : new_val,
 				});
