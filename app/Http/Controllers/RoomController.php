@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\DB;
 use App\Events\RoomJoinedEvent;
 use App\Events\someoneJoined;
 use App\Events\EverybodyHereEvent;
+use App\Events\printRenameEvent;
+use App\Events\finishedTutoEvent;
+use App\Events\throwDiceEvent;
+use App\Events\playCardEvent;
+use App\Events\playedEventEvent;
+use App\Events\playedQuizzEvent;
+use App\Events\playDefiEvent;
+use App\Events\playingDefiEvent;
+use App\Events\spiedEvent;
+use App\Events\playedActionEvent;
+use App\Events\playedDefiEvent;
 
 class RoomController extends Controller
 {
@@ -23,9 +34,9 @@ class RoomController extends Controller
         } else {
           return app()->getLocale();
         }
-      }
+    }
 
-    public function createRoomView() {
+    public function createRoomView($error = 0) {
         //TODO faire ça en un seul return quand t'as le temps en jouant avec set = basic de base
         $sets = ['basic'];
         $privilege = ['basic'];
@@ -47,20 +58,25 @@ class RoomController extends Controller
             'sets' => $sets,
             'privileges' => $privilege,
             'defaultSet' => $defaultSet,
-            'playing' => $playing
+            'playing' => $playing,
+            'error' => $error
         ]);
     }
 
     public function createRoom(Request $request) {
         $room = DB::table('rooms')
         ->where('url', $request['room_url'])->get();
+        $decks = "";
         if (count($room) == 0) {
+            foreach($request["play"] as $deck) {
+                $decks .= $deck . ',';
+            }
             DB::table('rooms')->insert(
-                ['url' => $request['room_url'], 'password' => $request['password']]
+                ['url' => $request['room_url'], 'password' => $request['password'], 'plateau' => $request['set'], 'collection' => $decks]
             );
-            return view('waitRoom', ['url' => $request['room_url']]);
+            return view('waitRoom', ['url' => $request['room_url'], 'number_player' => 1]);
         } else {
-            return view('createRoom', ['error' => '1']);
+            return $this->createRoomView(1);
         }
     }
 
@@ -70,39 +86,109 @@ class RoomController extends Controller
             ['password', '=', $request['password']]
         ])->get();
         if (count($room) != 0) {
+            DB::table('rooms')->where('url', '=', $request['room_url'])->increment('number_player');
             $event = new RoomJoinedEvent(['room' => $request['room_url']]);
             event($event);
-            return view('waitRoom', ['url' => $request['room_url']]);
+            return view('waitRoom', ['url' => $request['room_url'], 'number_player' => $room[0]->number_player]);
         }
     }
 
     public function someoneJoined(Request $request) {
-        $event = new someoneJoined(['room' => $request['room'], 'number_personn' => $request['number_personn']]);
+        $room = DB::table('rooms')->where('url', '=', $request['room'])->get();
+        $event = new someoneJoined(['room' => $request['room'], 'number_personn' => $room[0]->number_player]);
         event($event);
         return 'ok';
     }
     public function everybodyhere(Request $request) {
-        $event = new EverybodyHereEvent(['room' => $request['room'], 'number_personn' => $request['number_personn']]);
+        $room = DB::table('rooms')->where('url', '=', $request['room'])->get();
+        DB::table('rooms')->where('url', '=', $request['room'])->delete();
+        $event = new EverybodyHereEvent(['room' => $request['room'], 'number_personn' => $room[0]->number_player, 'room_info' => $room[0]]);
         event($event);
         return 'ok';
     }
     public function play(Request $request) {
-        if ($request->session()->has('room') && $request->session()->has('number_personn')) {
+        if ($request->session()->has('room') && $request->session()->has('number_personn') && $request->session()->has('room_info')) {
             //$request->session()->forget(['room', 'number_personn']);
             $lang = RoomController::getLang();//app()->getLocale();
             app()->setLocale($lang);
-            $room = DB::table('rooms')->where('url', '=', $request->session()->get('room'))->get();
-            $plateau = $room[0]->plateau;
-            $collection = explode(",", $room[0]->collection);
+            //$room = DB::table('rooms')->where('url', '=', $request->session()->get('room'))->get();
+            $plateau =  $request->session()->get('room_info')['plateau'];
+            $collection = explode(",", $request->session()->get('room_info')['collection']);
             $cartesEvent = DB::table('carteevent')
                 ->whereIn('collection', $collection)
                 ->get();
             $cartesAction = DB::table('carteaction')
                 ->whereIn('collection', $collection)
                 ->get();
-            return view('room', ['room' => $request->session()->get('room'), 'players'  => $request->session()->get('number_personn'), 'action' => $cartesAction, 'event' => $cartesEvent, 'lang' => $lang, 'plateau' => $plateau]);
+            return view('room', ['room' => $request->session()->get('room'), 'players'  => $request->session()->get('number_personn'), 'player_nbr' => $request->session()->get('player_nbr'),'action' => $cartesAction, 'event' => $cartesEvent, 'lang' => $lang, 'plateau' => $plateau]);
         } else {
             return redirect('error');
         }
+    }
+
+    public function print_rename(Request $request) {
+        $event = new printRenameEvent(['room' => $request['room'], 'id' => $request['id'], 'value' => $request['value']]);
+        event($event);
+        return 'lol';
+    }
+
+    public function finishedTuto(Request $request) {
+        $event = new finishedTutoEvent(['room' => $request['room']]);
+        event($event);
+        return 'ok';
+    }
+
+    public function throwDice(Request $request) {
+        $event = new throwDiceEvent(['room' => $request['room'], 'de' => $request['de'], 'player_number' => $request["player_number"]]);
+        event($event);
+    }
+
+    public function spied(Request $request) {
+        $event = new spiedEvent(['room' => $request['room'], 'span' => $request['span']]);
+        event($event);
+    }
+
+    public function playCard(Request $request) {
+        switch ($request["type"]) {
+            case 'Event':
+                $event = new playCardEvent(['room' => $request['room'], 'card' => $request['card'], 'type' => $request["type"]]);
+                break;
+            case 'Quizz':
+                $event = new playCardEvent(['room' => $request['room'], 'card' => $request['card'], 'type' => $request["type"], 'whereGoodAnswerIs' => $request["whereGoodAnswerIs"]]);
+                break;
+            case "Action":
+                $event = new playCardEvent(['room' => $request['room'], 'card' => $request['card'], 'type' => $request["type"]]);
+        }
+        event($event);
+    }
+
+    public function playingDefi(Request $request) {
+        $event = new playingDefiEvent(['room' => $request['room'], 'card' => $request['card'], 'value' => $request['value']]);
+        event($event);
+    }
+
+    public function playDefi(Request $request) {
+        $event = new playDefiEvent(['room' => $request['room'], 'card' => $request['card'], 'whoPress' => $request['whoPress']]);
+        event($event);
+    }
+
+    public function playedEvent(Request $request) {
+        $event = new playedEventEvent(['room' => $request['room'], 'card' => $request['card']]);
+        event($event);
+    }
+
+    public function playedQuizz(Request $request) {
+        $event = new playedQuizzEvent(['room' => $request['room'], 'card' => $request['card'], 'whereGoodAnswerIs' => $request["whereGoodAnswerIs"], 'answer_id' => $request["answer"]]);
+        event($event);
+    }
+
+    public function playedAction(Request $request) {
+        $event = new playedActionEvent(['room' => $request['room'], 'card' => $request['card']]);
+        event($event);
+    }
+
+    public function playedDefi(Request $request) {
+        $event = new playedDefiEvent(['room' => $request['room']]);
+        event($event);
     }
 }

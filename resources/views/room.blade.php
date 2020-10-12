@@ -60,7 +60,14 @@
         		<section id="canvasSection" style="height: 100%; width:100%">
         			<canvas id="c"></canvas>
         		  </section>
-        	 </div>
+			 </div>
+			 <div id="menu" class="col">
+        		<div id="PP">
+					<p id="tourp">{{ __('main.turn') }}<span id="tour"> Joueuse 1</span></p>
+				</div>
+        		<ul id="ulProfil">
+        		</ul>
+        	</div>
         </div>
         <div id="preload" style="display:none">
       @foreach ($action as $carte)
@@ -74,6 +81,55 @@
 	var plateauURL = "{{ url('/images/sets/plateau/' . $plateau . '/plateau.png') }}";
     var pionURL = "{{ $plateau }}";
     var room = "{{ $room }}";
+	var number_players = "{{ $players }}";
+	var player_number = "{{ $player_nbr }}" - 1;
+	function rename(id) {
+		// on cache le span avec le nom et on affiche l'input
+		$("#span_j_" + id).hide();
+		$("#input_j_" + id).show();
+		// sur un focusout, on met la nouvelle valeur dans le span
+		$("#input_j_" + id).focusout(function() {
+			let new_val = $(this).val();
+			$.post("https://lolitadventure.fr/print_rename", {
+				'_token' : "{{ csrf_token() }}",
+				room : room,
+				id : id,
+				value : new_val,
+			});
+		})
+		// pareil pour la touche entrée
+		$("#input_j_" + id).on('keypress', function(e) {
+			if (e.which == 13) {
+				let new_val = $(this).val();
+				$.post("https://lolitadventure.fr/print_rename", {
+					'_token' : "{{ csrf_token() }}",
+					room : room,
+					id : id,
+					value : new_val,
+				});
+			}
+		})
+	}
+	
+	function Reset()
+	{
+		$("#winDiv").hide();
+		for (var i = 0; i < pions.length; i++)
+		{
+			pions[i].id = 0;
+			pions[i].animate('top', plateau[0].top, { onChange: canvas.renderAll.bind(canvas) });
+			pions[i].animate('left', plateau[0].left, { onChange: canvas.renderAll.bind(canvas) });
+		}
+		clearTimeout();
+		$("#ulProfil > li").remove();
+		$("span").html("");
+		ThrowDice();
+	}
+
+	function HardReset()
+	{
+		location.reload();
+	}
 </script>
 		</body>
 
@@ -93,7 +149,7 @@
     		<address>Email : <a href=\"mailto:lolitadventure.fr@gmail.com\">m.imagianne@gmail.com</a><br />Facebook : <a href=\"https://www.facebook.com/lolitadventure\">Lolitadventure</a>\
     		</address><br />{{ __('main.gameOnline.tuto.4') }}<br />{{ __('main.gameOnline.tuto.5') }}<br />{{ __('main.gameOnline.tuto.6') }}<br />\
     	{{ __('main.gameOnline.tuto.7') }}<br /> 	{{ __('main.gameOnline.tuto.8') }}<br />{{ __('main.gameOnline.tuto.9') }}<br />{{ __('main.gameOnline.tuto.10') }}</p><button id=\"clickMe\">{{ __('main.gameOnline.tuto.11') }}</button>",
-    	1 : "{{ __('main.gameOnline.tuto.12') }}<br />{{ __('main.gameOnline.tuto.13') }}<br />{{ __('main.gameOnline.tuto.14') }}<br /><input id=\"nb_player\" value=1 type=\"number\"><button id='clickMe'>{{  __('main.gameOnline.tuto.15') }}</button><button class=\"skipMe\" click=\"skipTuto()\">{{  __('main.gameOnline.tuto.15b') }}</button>",
+    	1 : "{{ __('main.gameOnline.tuto.12') }}<br />{{ __('main.gameOnline.tuto.13') }}<br />{{ __('main.gameOnline.tuto.14') }}<br /><button id='clickMe'>{{  __('main.gameOnline.tuto.15') }}</button><button class=\"skipMe\" id=\"skipTuto\">{{  __('main.gameOnline.tuto.15b') }}</button>",
     	2 : "<h2 style='color:#fc97b5'>Tutoriel</h2><p>{{ __('main.gameOnline.tuto.16') }}<br /></p><button id='clickMe'>{{ __('main.gameOnline.tuto.17') }}</button>",
     	3 : "<div style='display: flex;flex-direction:row;justify-content:space-around;align-items: center;'><div style='max-width:50%'><p>{{ __('main.gameOnline.tuto.18') }}<br />\
     		{{ __('main.gameOnline.tuto.19') }}<br />{{ __('main.gameOnline.tuto.20') }}</p></div><img style='height:65vh; width:25vw;border:1px solid black' src='http://lolitadventure.fr/images/cartes/Event/" + lang + "/Event1.png'></div>\

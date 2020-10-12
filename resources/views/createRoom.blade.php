@@ -74,10 +74,10 @@
                         @if ($play != "")
                             @if ($play == $deck)
                             <label for="{{ $play }}" class="col-md-4 control-label">{{ $play }} :</label>
-                            <input type="checkbox" id="{{ $play }}" name="play" value="{{ $play }}" onclick="addDeck('{{$play}}')" checked>
+                            <input type="checkbox" id="{{ $play }}" name="play[]" value="{{ $play }}" onclick="addDeck('{{$play}}')" checked>
                             @else
                             <label for="{{ $deck }}" class="col-md-4 control-label">{{ $deck }} :</label>
-                            <input type="checkbox" id="{{ $deck }}" name="play" value="{{ $deck }}" onclick="addDeck('{{$play}}')">
+                            <input type="checkbox" id="{{ $deck }}" name="play[]" value="{{ $deck }}" onclick="addDeck('{{$play}}')">
                             @endif
                         @endif
                         @endforeach
@@ -98,5 +98,17 @@
         </section>
     </main>
 </body>
-
+<script>
+    function addDeck(play) {
+      let deck = document.getElementsByName('play[]');
+      let count_check = 0;
+      for (let i = 0; i < deck.length; i++){
+        if (deck[i].checked)
+          count_check++;
+      }
+      if (count_check == 0) {
+        deck[0].click();
+      }
+    }
+</script>
 </html>

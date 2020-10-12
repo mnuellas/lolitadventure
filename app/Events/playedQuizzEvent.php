@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class EverybodyHereEvent implements ShouldBroadcast
+class playedQuizzEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $room;
@@ -24,7 +24,6 @@ class EverybodyHereEvent implements ShouldBroadcast
     {
         $this->room = $room;
     }
-
     /**
      * Get the channels the event should broadcast on.
      *
@@ -34,11 +33,12 @@ class EverybodyHereEvent implements ShouldBroadcast
     {
         return new Channel('room.' . $this->room['room']);
     }
-    public function broadcastWith()
+    public function broadCastWith()
     {
         return [
-            "number_personn" => $this->room['number_personn'],
-            "room_info" => $this->room["room_info"]
+            'card' => $this->room["card"],
+            'whereGoodAnswerIs' => $this->room["whereGoodAnswerIs"],
+            'answer_id' => $this->room['answer_id']
         ];
     }
 }

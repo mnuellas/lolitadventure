@@ -21,6 +21,22 @@ Route::get('/images/{what}/{type}/{lang}/{carte}', [
      'as'         => 'images.show',
      'uses'       => 'ImagesController@show',
 ]);
+Route::get('storage/{filename}', function ($filename)
+{
+    $path = storage_path('app/public/' . $filename);
+    //return $path;
+    if (!File::exists($path)) {
+        abort(404, $filename);
+    }
+
+    $file = File::get($path);
+    $type = File::mimeType($path);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+
+    return $response;
+});
 
 Route::get('/shop', function() {
   return view('shop');
@@ -55,13 +71,30 @@ Route::get('/waitRoom', function(Request $request) {
 Route::get('/connectRoom/{room}', function ($room) {
   return view('connectRoom', ['room_url' => $room]);
 })->name('connectRoom');
+
 Route::post('/connectRoom', 'RoomController@joinRoom')->name('connectRoom');
 Route::post('/someonejoined', 'RoomController@someoneJoined');
 Route::post('/everybodyhere', 'RoomController@everybodyhere');
 Route::post('/okredirectUs', function(Request $request) {
   $request->session()->put('room',  $request['room']);
   $request->session()->put('number_personn', $request['number_personn']);
+  $request->session()->put('player_nbr', $request["player_number"]);
+  $request->session()->put('room_info', $request["room_info"]);
+  return response('ok');
 });
+
+Route::post('/print_rename', 'RoomController@print_rename');
+
+Route::post('/finishedTuto', 'RoomController@finishedTuto');
+Route::post('/throwDice', 'RoomController@throwDice');
+Route::post('/playCard', 'RoomController@playCard');
+Route::post('/playDefi', 'RoomController@playDefi');
+Route::post('/playingDefi', 'RoomController@playingDefi');
+Route::post('/spied', 'RoomController@spied');
+Route::post('/playedEvent', 'RoomController@playedEvent');
+Route::post('/playedQuizz', 'RoomController@playedQuizz');
+Route::post('/playedAction', 'RoomController@playedAction');
+Route::post('/playedDefi', 'RoomController@playedDefi');
 
 Route::get('/playRoom', 'RoomController@play');
 

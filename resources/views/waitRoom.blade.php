@@ -36,7 +36,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 <script>
 var token = "{{ Session::token() }}"
-var number_personn = document.getElementById("number_person").innerHTML;
+var number_personn = "{{ $number_player }}";
+var number_player = "{{ $number_player }}";
 var room = "{{ $url }}";
 function Ready() {
     $.post("https://lolitadventure.fr/everybodyhere", {
