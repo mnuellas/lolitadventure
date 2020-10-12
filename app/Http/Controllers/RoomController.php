@@ -19,6 +19,7 @@ use App\Events\playDefiEvent;
 use App\Events\playingDefiEvent;
 use App\Events\spiedEvent;
 use App\Events\playedActionEvent;
+use App\Events\playedDefiEvent;
 
 class RoomController extends Controller
 {
@@ -161,12 +162,12 @@ class RoomController extends Controller
     }
 
     public function playingDefi(Request $request) {
-        $event = new playingDefiEvent(['room' => $request['room'], 'card' => $request['card'], 'value', $request['value']]);
+        $event = new playingDefiEvent(['room' => $request['room'], 'card' => $request['card'], 'value' => $request['value']]);
         event($event);
     }
 
     public function playDefi(Request $request) {
-        $event = new playDefiEvent(['room' => $request['room'], 'card' => $request['card'], 'whoPress', $request['whoPress']]);
+        $event = new playDefiEvent(['room' => $request['room'], 'card' => $request['card'], 'whoPress' => $request['whoPress']]);
         event($event);
     }
 
@@ -182,6 +183,11 @@ class RoomController extends Controller
 
     public function playedAction(Request $request) {
         $event = new playedActionEvent(['room' => $request['room'], 'card' => $request['card']]);
+        event($event);
+    }
+
+    public function playedDefi(Request $request) {
+        $event = new playedDefiEvent(['room' => $request['room']]);
         event($event);
     }
 }
