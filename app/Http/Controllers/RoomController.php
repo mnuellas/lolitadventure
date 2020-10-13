@@ -90,6 +90,8 @@ class RoomController extends Controller
             $event = new RoomJoinedEvent(['room' => $request['room_url']]);
             event($event);
             return view('waitRoom', ['url' => $request['room_url'], 'number_player' => $room[0]->number_player]);
+        } else {
+            return redirect('connectRoom' . '/' . $request['room_url'])->withInput()->with('bad_password', 1);
         }
     }
 

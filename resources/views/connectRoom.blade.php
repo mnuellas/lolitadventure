@@ -25,6 +25,12 @@
     justify-content: center;
     margin: 0;
         }
+        .help-block {
+            display: block;
+    font-size: 18px;
+    color: black;
+    font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -43,9 +49,9 @@
     <div class="col-md-6">
         <input id="text" type="password" class="form-control" name="password" required>
 
-        @if ($errors->has('password'))
+        @if (session()->has('bad_password'))
             <span class="help-block">
-                <strong>{{ $errors->first('password') }}</strong>
+                {{ __('main.bad_password') }}
             </span>
         @endif
     </div>

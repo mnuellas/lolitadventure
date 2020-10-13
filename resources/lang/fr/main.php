@@ -146,5 +146,6 @@ return [
         "Facebook2" => " pour plus d'informations sur l'avancement des travaux et des nouvelles fonctionnalités~~♥",
         "fauteMessage" => "Ce site est encore en développement, il peut comporter quelques petits bugs et surtout des fautes d'orthographes !",
         "maintenanceMessage" => "Bijour~~ Le site sera fermé jusqu'au 30 décembre pour rénovation ! Nous sommes en route pour une aventure plus sécurisée et plus fun !"
-    ]
+    ],
+    "bad_password" => "Mauvais mot de passe"
 ];
