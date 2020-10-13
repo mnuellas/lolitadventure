@@ -110,3 +110,10 @@ box-shadow: 17px 10px 22px -6px rgba(0,0,0,0.53); */
     padding: 3px;
     margin-left: 5px;
 }
+
+.help-block {
+  display: block;
+font-size: 18px;
+color: black;
+font-style: italic;
+}

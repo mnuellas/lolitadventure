@@ -72,7 +72,7 @@ class RoomController extends Controller
                 $decks .= $deck . ',';
             }
             DB::table('rooms')->insert(
-                ['url' => $request['room_url'], 'password' => $request['password'], 'plateau' => $request['set'], 'collection' => $decks]
+                ['url' => $request['room_url'], 'password' => $request['room_password'], 'plateau' => $request['set'], 'collection' => $decks]
             );
             return view('waitRoom', ['url' => $request['room_url'], 'number_player' => 1]);
         } else {

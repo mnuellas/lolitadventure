@@ -15,29 +15,29 @@
 <body>
     <main>
         <section>
-            <h4>Create a room</h4>
-            <form class="form-horizontal" method="POST" action="{{ route('createRoom') }}">
+            <h4>{{ __('room.createTitle') }}</h4>
+            <form class="form-horizontal" method="POST" action="{{ route('createRoom') }}" autocomplete="off">
             {{ csrf_field() }}
 
             <div class="form-group{{ $errors->has('room_url') ? ' has-error' : '' }}">
                 <label for="room_url" class="col-md-4 control-label">{{ __('room.url') }} : </label>
 
                 <div class="col-md-6">
-                    <input id="room_url" type="text" class="form-control" name="room_url" value="{{ old('room_url') }}" required autofocus>
+                    <input id="room_url" type="text" class="form-control" name="room_url" value="{{ old('room_url') }}" placeholder="{{ __('room.pass_name') }}" required autofocus>
 
-                    @if ($errors->has('room_url'))
+                    @if ($error == 1)
                         <span class="help-block">
-                            <strong>{{ $errors->first('room_url') }}</strong>
+                            {{ __('room.exist') }}
                         </span>
                     @endif
                 </div>
             </div>
 
             <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                <label for="password" class="col-md-4 control-label">{{ __('main.password') }}</label>
+                <label for="room_password" class="col-md-4 control-label">{{ __('room.password') }} : </label>
 
                 <div class="col-md-6">
-                    <input id="text" type="password" class="form-control" name="password" required>
+                    <input id="text" type="text" class="form-control" name="room_password" placeholder="{{ __('room.pass_placeholder') }}" required>
 
                     @if ($errors->has('password'))
                         <span class="help-block">
@@ -86,15 +86,17 @@
                     </div>
 
             <div class="form-group">
-                <div class="col-md-8 col-md-offset-4">
+                <div class="col-md-8 col-md-offset-4" style="width: 100%;text-align: center;">
                     <button type="submit" class="btn btn-primary">
                         {{ __('room.create') }}
                     </button>
                 </div>
             </div>
             </form>
+            <div style="width: 100%;text-align: center;">
             <a href="{{ route('chooseRoom') }}"><button class="btn btn-danger"> {{ __('room.return') }}</button></a>
             <p><a href="{{ url('/') }}"><i class="fas fa-home"></i></a></p>
+            <div>
         </section>
     </main>
 </body>
