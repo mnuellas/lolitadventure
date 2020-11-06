@@ -29,7 +29,7 @@
     font-family: "Courgette";
     background-color: rgb(255, 255, 255);
     font-size: 50%;
-    padding: 5px;
+    padding: 6px;
     border: none;
     border-radius: 10px;
     }
