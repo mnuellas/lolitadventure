@@ -25,18 +25,34 @@
     justify-content: center;
     margin: 0;
         }
+    #new_room {
+    font-family: "Courgette";
+    background-color: rgb(255, 255, 255);
+    font-size: 75%;
+    border: none;
+    border-radius: 10px;
+    }
+    #new_room:hover {
+        font-style: italic;
+    }
+    .room_link {
+        background: none;border: none;font-size: 75%;
+    }
+    .room_link:hover {
+        color: white;
+    }
     </style>
 </head>
 <body>
 <p>Room</p>
 @if (count($rooms) > 0)
         @foreach ($rooms as $room)
-            <p>{{ $room->url }}<a href="{{ route('/connectRoom/' . $room->url) }}"><button><i class="fas fa-sign-in-alt"></i></button></a></p>
+            <p>{{ $room->url }}<a href="{{ url('/connectRoom/' . $room->url) }}"><button class="room_link"><i class="fas fa-sign-in-alt"></i></button></a></p>
         @endforeach
 @else
         <p>No room</p>
 @endif
-<a href="{{ route('createRoom') }}"><button >Create a new room</button></a>
+<a href="{{ route('createRoom') }}"><button id="new_room">Create a new room</button></a>
 <p><a href="{{ url('/') }}"><i class="fas fa-home"></i></a></p>
 </body>
 </html>

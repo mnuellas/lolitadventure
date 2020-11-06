@@ -52,6 +52,8 @@
 					@endauth
 						<a href="{{ route('lexicon') }}" class="mapA" target="_blank"><i class="fa fa-fw fa-envelope iconL"></i> {{ __('main.lexicon') }} <i class="fas fa-fw fa-envelope iconR"></i></a>
 					<div class="line"></div>
+						<a href="{{ route('chooseRoom') }}" class="mapA"><i class="fas fa-fw fa-gamepad iconL"></i> Multi <i class="fas fa-fw fa-gamepad iconR"></i></a>
+					<div class="line"></div>
 					<div id="shop">
 						<a href="{{ route('shop') }}" class="mapA"><i class="fa fa-fw fa-chess-queen iconL"></i> {{ __('main.shop') }} <i class="fas fa-fw fa-chess-queen iconR"></i></a>
 					<div class="line shopHover"></div>

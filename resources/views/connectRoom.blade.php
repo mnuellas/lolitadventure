@@ -25,6 +25,23 @@
     justify-content: center;
     margin: 0;
         }
+    #joinRoom {
+    font-family: "Courgette";
+    background-color: rgb(255, 255, 255);
+    font-size: 50%;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+    }
+    #joinRoom:hover {
+        font-style: italic;
+    }
+    .room_link {
+        background: none;border: none;font-size: 75%;
+    }
+    .room_link:hover {
+        color: white;
+    }
     </style>
 </head>
 <body>
@@ -54,13 +71,13 @@
 
 <div class="form-group">
     <div class="col-md-8 col-md-offset-4">
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary" id="joinRoom">
             {{ __('main.login') }}
         </button>
     </div>
 </div>
 </form>
-<a href="{{ route('chooseRoom') }}"><button><i class="fas fa-reply"></i></button></a>
+<a href="{{ route('chooseRoom') }}"><button class="room_link"><i class="fas fa-reply"></i></button></a>
 <p><a href="{{ url('/') }}"><i class="fas fa-home"></i></a></p>
 </body>
 </html>
