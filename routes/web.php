@@ -53,7 +53,8 @@ Route::get('/en', function() {
 })->name('en');
 
 Route::get('/digitalShop', function() {
-  return view('digitalShop');
+  //return view('digitalShop');
+  return view('shop');
 })->name('digital shop');
 
 Route::get('/boardShop', function() {

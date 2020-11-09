@@ -62,7 +62,7 @@
             <div class="container">
               <h2>Jane Doe</h2>
               <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-              <p><button class="buttonA">{{ __('shop.knowMore') }}</button><button class="buttonB">buy</button></p>
+              <p><button class="buttonA">{{ __('shop.knowMore') }}</button><button class="buttonB" onclick="add2cart('Jane Doe')">buy</button></p>
             </div>
           </div>
         </div>
