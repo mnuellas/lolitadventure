@@ -6,7 +6,7 @@ return [
     "create" => "valider",
     "return" => "revenir en arrière",
     "pass_placeholder" => "mot de passe nul",
-    "pass_name" => "nom à la c*n",
+    "pass_name" => "nom à la noix",
     "exist" => "Cette chambre existe déjà !",
     "decks" => "Right now I'm playing with",
 ];
